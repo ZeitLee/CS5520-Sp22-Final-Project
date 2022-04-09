@@ -38,6 +38,24 @@ public class createReminder extends AppCompatActivity {
         myTextDisplayDate = (TextView) findViewById(R.id.dateSelector);
         myTextDisplayTime = (TextView) findViewById(R.id.timeSelector);
 
+        initialSetting();
+
+    }
+
+    public void backtoMain(View V){
+        //view occupies a rectangular area on the screen and
+        // is responsible for drawing and event handling
+        //Toast.makeText(getApplicationContext(), "wiggle wiggle", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * A helper method to set all functions in this activity. (Now set time and date clickable to
+     * set time and date).
+     *
+     */
+    private void initialSetting() {
         // set click listener to date text and image to open date setting dialog.
         myTextDisplayDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,7 +69,7 @@ public class createReminder extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 int showMonth = month + 1; // since the month is 0-based data.
-                String date = String.format("%s/%s/%s", showMonth, day, year);
+                String date = String.format("%d/%d/%d", showMonth, day, year);
                 myTextDisplayDate.setText(date);
             }
         };
@@ -68,19 +86,10 @@ public class createReminder extends AppCompatActivity {
         myTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-                String time = String.format("%s:%s", hour, minute);
+                String time = String.format("%d:%d", hour, minute);
                 myTextDisplayTime.setText(time);
             }
         };
-
-    }
-
-    public void backtoMain(View V){
-        //view occupies a rectangular area on the screen and
-        // is responsible for drawing and event handling
-        //Toast.makeText(getApplicationContext(), "wiggle wiggle", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
     }
 
     // This is a helper method to show date selector screen.
