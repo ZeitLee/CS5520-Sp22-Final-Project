@@ -3,11 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/abing/AndroidStudioProjects/CS5520-Sp22-Final-Project/app/src/main/res/drawable/et_layout.xml" value="0.3635" />
-        <entry key="..\:/Users/abing/AndroidStudioProjects/CS5520-Sp22-Final-Project/app/src/main/res/layout/activity_create_reminder.xml" value="0.33" />
-        <entry key="..\:/Users/abing/AndroidStudioProjects/CS5520-Sp22-Final-Project/app/src/main/res/layout/activity_main.xml" value="0.33" />
-        <entry key="..\:/Users/abing/AndroidStudioProjects/CS5520-Sp22-Final-Project/app/src/main/res/layout/activity_main2.xml" value="0.24427083333333333" />
-        <entry key="..\:/Users/abing/AndroidStudioProjects/CS5520-Sp22-Final-Project/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.3635" />
+        <entry key="app/src/main/res/layout/activity_create_reminder.xml" value="0.20969202898550723" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.33" />
       </map>
     </option>
   </component>
