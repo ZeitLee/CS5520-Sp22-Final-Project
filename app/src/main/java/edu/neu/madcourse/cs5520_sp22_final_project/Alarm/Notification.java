@@ -1,4 +1,4 @@
-package edu.neu.madcourse.cs5520_sp22_final_project;
+package edu.neu.madcourse.cs5520_sp22_final_project.Alarm;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -8,10 +8,12 @@ import android.graphics.Bitmap;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import edu.neu.madcourse.cs5520_sp22_final_project.R;
+
 public class Notification {
     private final NotificationManagerCompat notificationManagerCompat;
     private static final String CID = "CID_1";
-    private static final String MESSAGE = "You received a sticker from ";
+    private static final String MESSAGE = "You received a reminder ";
     private static int NID = 1;
     private final Context context;
 
@@ -23,11 +25,11 @@ public class Notification {
         this.notificationManagerCompat = NotificationManagerCompat.from(context);
     }
 
-    public void notification(String username) {
+    public void notification(String msg) {
         android.app.Notification n = new NotificationCompat.Builder(context, CID)
                 .setSmallIcon(R.drawable.ic_launcher_background)
                 .setContentTitle(MESSAGE)
-                .setContentText(username)
+                .setContentText(msg)
                 .build();
         this.notificationManagerCompat.notify(NID++, n);
     }
