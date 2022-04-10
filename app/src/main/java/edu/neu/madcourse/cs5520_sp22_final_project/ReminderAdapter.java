@@ -25,6 +25,14 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ReminderViewHolder holder, int position) {
+        Reminder item = itemList.get(position);
+        holder.currentItemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
 
     }
 
