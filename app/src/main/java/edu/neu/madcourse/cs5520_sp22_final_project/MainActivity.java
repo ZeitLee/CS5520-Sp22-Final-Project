@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import edu.neu.madcourse.cs5520_sp22_final_project.models.Reminder;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -21,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private ReminderAdapter rviewAdapter;
     private RecyclerView.LayoutManager rLayoutManger;
     private TextView dateDisplay;
+    private ImageView addIcon;
 
     private final ArrayList<Reminder> itemList = new ArrayList<>();
 
@@ -29,9 +32,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         loadComponent();
+        loadListener();
         loadReminders();
-        createRecyclerView();
-
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
                 new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.LEFT) {
                     @Override
@@ -58,6 +60,18 @@ public class MainActivity extends AppCompatActivity {
         String currentDate = dateFormat.format(calendar.getTime());
         dateDisplay = findViewById(R.id.main_date);
         dateDisplay.setText(currentDate);
+        addIcon = findViewById(R.id.add_icon);
+        createRecyclerView();
+    }
+
+    private void loadListener() {
+        addIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                createNewReminder();
+            }
+        });
+
     }
 
     private void loadReminders() {

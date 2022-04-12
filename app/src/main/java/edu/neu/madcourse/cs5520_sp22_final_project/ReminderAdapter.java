@@ -1,5 +1,6 @@
 package edu.neu.madcourse.cs5520_sp22_final_project;
 
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,10 +27,26 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ReminderViewHolder holder, int position) {
         Reminder item = itemList.get(position);
+        holder.title.setText(item.title);
         holder.currentItemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+            }
+        });
+
+        if (holder.itemCheck.isChecked()) {
+            holder.title.setPaintFlags(holder.title.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
+        } else {
+            holder.title.setPaintFlags(holder.title.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+        }
+
+        holder.itemCheck.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                notifyDataSetChanged();
             }
         });
 

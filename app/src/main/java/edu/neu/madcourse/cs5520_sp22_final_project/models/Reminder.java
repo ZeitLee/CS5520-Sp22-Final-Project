@@ -7,18 +7,18 @@ import android.speech.tts.Voice;
 import java.util.UUID;
 
 public class Reminder {
-    private String id;
-    private String title;
-    private String description;
-    private Image image;
-    private Voice voice;
-    private String date;
-    private String time;
-    private Location location;
+    public String id;
+    public String title;
+    public String description;
+    public Image image;
+    public Voice voice;
+    public String date;
+    public String time;
+    public Location location;
 
     public Reminder() {
         id = UUID.randomUUID().toString();
-        title = "";
+        title = "Task Name";
         description = "";
         image = null;
         voice = null;
