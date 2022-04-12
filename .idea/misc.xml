@@ -3,9 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.142" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.142" />
         <entry key="app/src/main/res/drawable/reminder_style.xml" value="0.142" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.16847826086956522" />
-        <entry key="app/src/main/res/layout/reminder_list_item.xml" value="0.160081053698075" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/reminder_list_item.xml" value="0.3546153554558875" />
       </map>
     </option>
   </component>
