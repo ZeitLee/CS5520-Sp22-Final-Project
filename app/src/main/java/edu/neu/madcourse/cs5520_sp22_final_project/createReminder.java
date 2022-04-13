@@ -1,13 +1,21 @@
 package edu.neu.madcourse.cs5520_sp22_final_project;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -15,7 +23,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class createReminder extends AppCompatActivity {
 
@@ -26,8 +38,8 @@ public class createReminder extends AppCompatActivity {
     private ImageView myImageDisplayTime;
     private DatePickerDialog.OnDateSetListener myDateSetListener;
     private TimePickerDialog.OnTimeSetListener myTimeSetListener;
-
-
+    private ImageView addPhoto;
+    private EditText description;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +49,8 @@ public class createReminder extends AppCompatActivity {
         nameInput = (EditText) findViewById(R.id.editTextTaskName);
         myTextDisplayDate = (TextView) findViewById(R.id.dateSelector);
         myTextDisplayTime = (TextView) findViewById(R.id.timeSelector);
+        addPhoto = (ImageView) findViewById(R.id.photoImageView);
+        description = (EditText) findViewById(R.id.editTextTextMultiLine);
 
         initialSetting();
 
@@ -61,6 +75,14 @@ public class createReminder extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 showDateSelecotr();
+            }
+        });
+
+        addPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dispatchTakePictureIntent();
+                //onActivityResult();
             }
         });
 
@@ -119,6 +141,32 @@ public class createReminder extends AppCompatActivity {
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
     }
+
+
+
+
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        try {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        } catch (ActivityNotFoundException e) {
+            // display error state to the user
+        }
+    }
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            Bitmap scaledImage = Bitmap.createScaledBitmap(imageBitmap,400,400, false);
+            //addPhoto.setImageBitmap(imageBitmap);
+            Drawable d = new BitmapDrawable(getResources(), scaledImage);
+            description.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null);
+        }
+    }
+
 
 
 

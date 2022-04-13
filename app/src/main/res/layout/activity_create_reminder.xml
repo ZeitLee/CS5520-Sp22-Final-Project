@@ -106,4 +106,12 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView3"
         app:srcCompat="@drawable/people_foreground" />
 
+    <ImageView
+        android:id="@+id/photoImageView"
+        android:layout_width="49dp"
+        android:layout_height="45dp"
+        app:layout_constraintBottom_toBottomOf="@+id/editTextTextMultiLine"
+        app:layout_constraintEnd_toEndOf="@+id/editTextTextMultiLine"
+        app:srcCompat="@drawable/add_photo_foreground" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
