@@ -8,6 +8,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -24,12 +26,19 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.CancellationTokenSource;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.io.IOException;
+import java.util.List;
+
 import javax.security.auth.callback.Callback;
 
 public class Loc {
     private final FusedLocationProviderClient fusedLoc;
+    private double lo;
+    private double la;
+    private Activity activity;
 
     public Loc(Activity activity) {
+        this.activity = activity;
         fusedLoc = LocationServices.getFusedLocationProviderClient(activity);
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -41,17 +50,25 @@ public class Loc {
         }
 
         LocationRequest mLocationRequest = LocationRequest.create();
-        mLocationRequest.setInterval(60000);
+        mLocationRequest.setInterval(15000);
         mLocationRequest.setFastestInterval(5000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setNumUpdates(1);
+//        mLocationRequest.setNumUpdates(1);
 
         fusedLoc.requestLocationUpdates(mLocationRequest, callback(), null);
 
     }
 
-    public void getLocation() {
-
+    public String getLocation() {
+        Geocoder geocoder = new Geocoder(activity);
+        try {
+            List<Address> addresses = geocoder.getFromLocation(la, lo, 1);
+            System.out.println(addresses.get(0));
+            return addresses.size() > 0 ? addresses.get(0).getLocality() : "Invalid";
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "invalid";
     }
 
     private LocationCallback callback() {
@@ -74,6 +91,8 @@ public class Loc {
                         System.out.println("curr");
                         System.out.println(location.getLatitude());
                         System.out.println(location.getLongitude());
+                        la = location.getLatitude();
+                        lo = location.getLongitude();
                         System.out.println("+++++++++++++++++");
                     }
                 });
