@@ -13,7 +13,7 @@ import edu.neu.madcourse.cs5520_sp22_final_project.R;
 public class Notification {
     private final NotificationManagerCompat notificationManagerCompat;
     private static final String CID = "CID_1";
-    private static final String MESSAGE = "You received a reminder ";
+    private static final String MESSAGE = "Reminder ";
     private static int NID = 1;
     private final Context context;
 

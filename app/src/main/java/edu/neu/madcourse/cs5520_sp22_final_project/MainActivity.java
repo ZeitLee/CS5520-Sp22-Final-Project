@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import edu.neu.madcourse.cs5520_sp22_final_project.Alarm.Alarm;
+import edu.neu.madcourse.cs5520_sp22_final_project.Location.Loc;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -16,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void clickListener(View v) {
-        new Alarm(this).fireAlarm();
+        new Alarm(this).fireAlarm("reminder test");
+        new Loc(this);
     }
 }
