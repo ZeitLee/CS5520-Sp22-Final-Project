@@ -1,9 +1,12 @@
 package edu.neu.madcourse.cs5520_sp22_final_project;
 
+import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -13,6 +16,8 @@ import edu.neu.madcourse.cs5520_sp22_final_project.models.Reminder;
 
 public class ReminderAdapter extends RecyclerView.Adapter<ReminderViewHolder> {
     private final ArrayList<Reminder> itemList;
+    private SharedPreferences.Editor edit;
+    private Gson gson = new Gson();
     public ReminderAdapter(ArrayList<Reminder> itemList) {
         this.itemList = itemList;
     }
@@ -27,13 +32,18 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ReminderViewHolder holder, int position) {
         Reminder item = itemList.get(position);
+        holder.id = item.id;
         holder.title.setText(item.title);
+        holder.itemCheck.setChecked(item.completed);
+
+
         holder.currentItemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
         });
+
 
         if (holder.itemCheck.isChecked()) {
             holder.title.setPaintFlags(holder.title.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
@@ -46,11 +56,17 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderViewHolder> {
 
             @Override
             public void onClick(View v) {
+                item.completed = !item.completed;
+                String json = gson.toJson(item);
+                edit.putString(item.id, json);
+                edit.apply();
                 notifyDataSetChanged();
             }
         });
+    }
 
-
+    public void setEdit(SharedPreferences.Editor edit) {
+        this.edit = edit;
     }
 
     @Override

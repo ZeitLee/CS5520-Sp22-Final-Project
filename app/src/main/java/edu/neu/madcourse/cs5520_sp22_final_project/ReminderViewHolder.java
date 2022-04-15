@@ -13,6 +13,7 @@ public class ReminderViewHolder extends RecyclerView.ViewHolder {
     public TextView title;
     public View currentItemView;
     public CheckBox itemCheck;
+    public String id;
 
     public ReminderViewHolder(@NonNull View itemView) {
         super(itemView);
