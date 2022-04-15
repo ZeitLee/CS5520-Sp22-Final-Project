@@ -21,7 +21,7 @@ public class Alarm {
     public void fireAlarm(String msg) {
         Calendar calendar = Calendar.getInstance();
         //month is 0-indexed
-        calendar.set(2022, 4 - 1 , 9, 16, 15, 0);
+        calendar.set(2022, 4 - 1 , 14, 21, 15, 0);
 
         System.out.println("+++++++++++++++++");
         System.out.println("calendar" + calendar.getTimeInMillis());

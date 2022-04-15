@@ -14,6 +14,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Looper;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -35,6 +36,7 @@ public class Loc {
     private final FusedLocationProviderClient fusedLoc;
     private double lo;
     private double la;
+    private String address = "";
     private Activity activity;
 
     public Loc(Activity activity) {
@@ -53,35 +55,31 @@ public class Loc {
         mLocationRequest.setInterval(15000);
         mLocationRequest.setFastestInterval(5000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-//        mLocationRequest.setNumUpdates(1);
+        mLocationRequest.setNumUpdates(1);
 
         fusedLoc.requestLocationUpdates(mLocationRequest, callback(), null);
 
     }
 
     public String getLocation() {
-        Geocoder geocoder = new Geocoder(activity);
-        try {
-            List<Address> addresses = geocoder.getFromLocation(la, lo, 1);
-            System.out.println(addresses.get(0));
-            return addresses.size() > 0 ? addresses.get(0).getLocality() : "Invalid";
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "invalid";
+        return address;
+    }
+
+    public void setViewLocation(TextView view) {
+        getCurr(view);
     }
 
     private LocationCallback callback() {
         return new LocationCallback() {
             @Override
             public void onLocationResult(@NonNull LocationResult locationResult) {
-                getCurr();
+                getCurr(null);
             }
         };
     }
 
     @SuppressLint("MissingPermission")
-    private void getCurr() {
+    private void getCurr(TextView view) {
         CancellationTokenSource tokenSource = new CancellationTokenSource();
         fusedLoc.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, tokenSource.getToken())
                 .addOnSuccessListener(new OnSuccessListener<Location>() {
@@ -94,6 +92,19 @@ public class Loc {
                         la = location.getLatitude();
                         lo = location.getLongitude();
                         System.out.println("+++++++++++++++++");
+
+                        Geocoder geocoder = new Geocoder(activity);
+                        try {
+                            List<Address> addresses = geocoder.getFromLocation(la, lo, 1);
+                            System.out.println(addresses.get(0));
+                            address = addresses.size() > 0 ? addresses.get(0).getLocality()
+                                    : "Invalid";
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        if (view != null) {
+                            view.setText(address);
+                        }
                     }
                 });
     }

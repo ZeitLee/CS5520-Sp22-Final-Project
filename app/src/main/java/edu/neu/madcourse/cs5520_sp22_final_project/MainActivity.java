@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import java.util.Arrays;
 
@@ -18,10 +19,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         loc = new Loc(this);
+        TextView view = findViewById(R.id.textView);
+        loc.setViewLocation(view);
     }
 
     public void clickListener(View v) {
-//        new Alarm(this).fireAlarm("reminder test");
-        System.out.println(loc.getLocation());
+        new Alarm(this).fireAlarm(loc.getLocation());
+        TextView view = findViewById(R.id.textView);
+        loc.setViewLocation(view);
     }
 }
