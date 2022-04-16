@@ -1,13 +1,29 @@
 package edu.neu.madcourse.cs5520_sp22_final_project;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.camera.core.CameraSelector;
+import androidx.camera.core.ImageAnalysis;
+import androidx.camera.core.ImageCapture;
+import androidx.camera.core.ImageCaptureException;
+import androidx.camera.core.Preview;
+import androidx.camera.core.Camera;
+import androidx.camera.extensions.HdrImageCaptureExtender;
+import androidx.camera.lifecycle.ProcessCameraProvider;
+import androidx.camera.view.PreviewView;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.lifecycle.LifecycleOwner;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+//import android.graphics.Camera;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
@@ -15,19 +31,28 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
+
+import com.google.common.util.concurrent.ListenableFuture;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class createReminder extends AppCompatActivity {
 
@@ -41,6 +66,7 @@ public class createReminder extends AppCompatActivity {
     private ImageView addPhoto;
     private EditText description;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,14 +78,14 @@ public class createReminder extends AppCompatActivity {
         addPhoto = (ImageView) findViewById(R.id.photoImageView);
         description = (EditText) findViewById(R.id.editTextTextMultiLine);
 
+
+
         initialSetting();
 
     }
 
+    // Go back to the previous screen
     public void backtoMain(View V){
-        //view occupies a rectangular area on the screen and
-        // is responsible for drawing and event handling
-        //Toast.makeText(getApplicationContext(), "wiggle wiggle", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
@@ -78,11 +104,11 @@ public class createReminder extends AppCompatActivity {
             }
         });
 
+        // on click listener for adding images to the description
         addPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dispatchTakePictureIntent();
-                //onActivityResult();
+                dispatchTakePictureIntent(); //take pictures
             }
         });
 
@@ -143,31 +169,102 @@ public class createReminder extends AppCompatActivity {
     }
 
 
-
-
+    // Some local variables needed for saving pictures to storage
     static final int REQUEST_IMAGE_CAPTURE = 1;
+    String currentPhotoPath; //can be retrieved later
+    /*
+    Default path for the images:
+    Android/data/edu.neu.madcourse.cs5520_sp22_final_project/files/Pictures
+     */
+    Toast toast;
 
+    // Create temporary images files in the designated path
+    // this temp image will be replaced by the image taken by the user
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        @SuppressLint("SimpleDateFormat") String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,   //prefix
+                ".jpg",         // suffix
+                storageDir      // directory
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    // This method opens up the camera app, and saves the images to storage
+    Uri photoURI;
     private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        try {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-        } catch (ActivityNotFoundException e) {
-            // display error state to the user
+        Intent takePictureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile =  null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+                toast = Toast.makeText(getApplicationContext(), "failed to create image file", Toast.LENGTH_LONG);
+                toast.show();
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                photoURI = FileProvider.getUriForFile(this,
+                        "com.example.android.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
         }
     }
+
+    // Helper method that shows a preview of the image in the "Description" box
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            Bitmap scaledImage = Bitmap.createScaledBitmap(imageBitmap,400,400, false);
+            Bitmap imageBitmap = null;
+            try {
+                imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoURI);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Bitmap scaledImage = Bitmap.createScaledBitmap(imageBitmap, 400, 400, false);
             //addPhoto.setImageBitmap(imageBitmap);
             Drawable d = new BitmapDrawable(getResources(), scaledImage);
             description.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null);
+
+            toast = Toast.makeText(getApplicationContext(), "Image saved successfully!", Toast.LENGTH_SHORT);
+            toast.show();
         }
     }
+
+
+
+
+
+
+
 
 
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
