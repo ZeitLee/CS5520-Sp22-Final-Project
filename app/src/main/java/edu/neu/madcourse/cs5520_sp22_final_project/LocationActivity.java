@@ -20,7 +20,7 @@ public class LocationActivity extends AppCompatActivity {
     private Loc loc;
     private String address;
     TextView view;
-    ActivityResultLauncher<Intent> activityResultLaunch = registerForActivityResult(
+    ActivityResultLauncher<Intent> intentActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -55,6 +55,6 @@ public class LocationActivity extends AppCompatActivity {
         address = loc.getAddress();
         intent.putExtra("loc", (Serializable) loc.getGeoLoc());
         intent.putExtra("address", address);
-        activityResultLaunch.launch(intent);
+        intentActivityResultLauncher.launch(intent);
     }
 }
