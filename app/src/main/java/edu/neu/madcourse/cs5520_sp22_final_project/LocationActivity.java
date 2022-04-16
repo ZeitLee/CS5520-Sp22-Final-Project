@@ -12,13 +12,11 @@ import android.view.View;
 import android.widget.TextView;
 
 import java.io.Serializable;
-import java.util.Arrays;
 
-import edu.neu.madcourse.cs5520_sp22_final_project.Alarm.Alarm;
 import edu.neu.madcourse.cs5520_sp22_final_project.Location.Loc;
 
 
-public class MainActivity extends AppCompatActivity {
+public class LocationActivity extends AppCompatActivity {
     private Loc loc;
     private String address;
     TextView view;
@@ -42,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_location);
         loc = new Loc(this);
         view = findViewById(R.id.textView);
         loc.setViewLocation(view);
