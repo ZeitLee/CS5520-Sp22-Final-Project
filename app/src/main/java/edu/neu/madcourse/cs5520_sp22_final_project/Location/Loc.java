@@ -59,9 +59,10 @@ public class Loc {
 
         fusedLoc.requestLocationUpdates(mLocationRequest, callback(), null);
 
+        getCurr(null);
     }
 
-    public String getLocation() {
+    public String getAddress() {
         return address;
     }
 
