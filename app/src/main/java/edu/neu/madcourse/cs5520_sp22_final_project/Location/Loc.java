@@ -65,6 +65,8 @@ public class Loc {
         return address;
     }
 
+    public double[] getGeoLoc() { return new double[]{lo, la}; }
+
     public void setViewLocation(TextView view) {
         getCurr(view);
     }
@@ -93,19 +95,24 @@ public class Loc {
                         lo = location.getLongitude();
                         System.out.println("+++++++++++++++++");
 
-                        Geocoder geocoder = new Geocoder(activity);
-                        try {
-                            List<Address> addresses = geocoder.getFromLocation(la, lo, 1);
-                            System.out.println(addresses.get(0));
-                            address = addresses.size() > 0 ? addresses.get(0).getAddressLine(0)
-                                    : "Invalid";
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        address = geoToAddress(la, lo, activity);
                         if (view != null) {
                             view.setText(address);
                         }
                     }
                 });
+    }
+
+    public static String geoToAddress(double la, double lo, Activity activity) {
+        Geocoder geocoder = new Geocoder(activity);
+        String address = "";
+        try {
+            List<Address> addresses = geocoder.getFromLocation(la, lo, 1);
+            address = addresses.size() > 0 ? addresses.get(0).getAddressLine(0)
+                    : "Invalid";
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return address;
     }
 }
