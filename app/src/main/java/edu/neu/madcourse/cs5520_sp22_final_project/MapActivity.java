@@ -58,7 +58,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         googleMap.addMarker(new MarkerOptions()
                 .position(currLoc)
                 .title(address));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(currLoc));
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currLoc,8));;
 
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
@@ -68,7 +68,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 option.position(latLng)
                         .title(address);
                 googleMap.clear();
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,5));
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,8));
                 // Add marker on map
                 googleMap.addMarker(option);
             }
