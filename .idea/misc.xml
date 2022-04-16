@@ -6,6 +6,9 @@
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.175" />
         <entry key="app/src/main/res/layout/activity_create_reminder.xml" value="0.22871376811594202" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_map.xml" value="0.17147922998986828" />
+        <entry key="app/src/main/res/layout/fragment_map.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/map_fragment.xml" value="0.17708333333333334" />
       </map>
     </option>
   </component>
