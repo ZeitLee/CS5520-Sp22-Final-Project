@@ -97,7 +97,7 @@ public class Loc {
                         try {
                             List<Address> addresses = geocoder.getFromLocation(la, lo, 1);
                             System.out.println(addresses.get(0));
-                            address = addresses.size() > 0 ? addresses.get(0).getLocality()
+                            address = addresses.size() > 0 ? addresses.get(0).getAddressLine(0)
                                     : "Invalid";
                         } catch (IOException e) {
                             e.printStackTrace();
