@@ -43,26 +43,30 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import edu.neu.madcourse.cs5520_sp22_final_project.models.Reminder;
+
 public class createReminder extends AppCompatActivity {
 
     private EditText nameInput;
+    private EditText mDescription;
     private TextView myTextDisplayDate;
-    private ImageView myImageDisplayDate;
     private TextView myTextDisplayTime;
-    private ImageView myImageDisplayTime;
     private DatePickerDialog.OnDateSetListener myDateSetListener;
     private TimePickerDialog.OnTimeSetListener myTimeSetListener;
     private ImageView addPhoto;
-    private EditText description;
     private ImageView mapSelector;
     private Button done;
     private SharedPreferences mSharedPreference;
     private SharedPreferences.Editor mSharedEditor;
     private Gson gson;
+
+    private String dateString;
+    private String timeString;
 
 
     @Override
@@ -74,7 +78,7 @@ public class createReminder extends AppCompatActivity {
         myTextDisplayDate = (TextView) findViewById(R.id.dateSelector);
         myTextDisplayTime = (TextView) findViewById(R.id.timeSelector);
         addPhoto = (ImageView) findViewById(R.id.photoImageView);
-        description = (EditText) findViewById(R.id.editTextTextMultiLine);
+        mDescription = (EditText) findViewById(R.id.description);
         mapSelector = (ImageView) findViewById(R.id.mapSelector);
         done = (Button) findViewById(R.id.saveData);
 
@@ -114,8 +118,8 @@ public class createReminder extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 int showMonth = month + 1; // since the month is 0-based data.
-                String date = String.format("%d/%d/%d", showMonth, day, year);
-                myTextDisplayDate.setText(date);
+                dateString = String.format("%d/%d/%d", showMonth, day, year);
+                myTextDisplayDate.setText(dateString);
             }
         };
 
@@ -131,8 +135,8 @@ public class createReminder extends AppCompatActivity {
         myTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-                String time = String.format("%d:%d", hour, minute);
-                myTextDisplayTime.setText(time);
+                timeString = String.format("%d:%d", hour, minute);
+                myTextDisplayTime.setText(timeString);
             }
         };
 
@@ -141,6 +145,15 @@ public class createReminder extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 showMapSelector();
+            }
+        });
+
+        // done button action.
+        done.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                settingDone();
+                backtoMain(view);
             }
         });
 
@@ -254,16 +267,53 @@ public class createReminder extends AppCompatActivity {
             Bitmap scaledImage = Bitmap.createScaledBitmap(imageBitmap, 400, 400, false);
             //addPhoto.setImageBitmap(imageBitmap);
             Drawable d = new BitmapDrawable(getResources(), scaledImage);
-            description.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null);
+            mDescription.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null);
 
             toast = Toast.makeText(getApplicationContext(), "Image saved successfully!", Toast.LENGTH_SHORT);
             toast.show();
         }
     }
 
+    // Helper method to handle done button.
+    private void settingDone() {
+        // convert all data to json.
+        String value = buildJson();
+        // save data to shared preference.
+        // use task name as key.
+        saveData(nameInput.getText().toString(), value);
+        // create a new task in main.
+        MainActivity.getMyInstanceActivity().createNewReminder(value);
+    }
+
     // Helper method that save data in to local storage.
     private void saveData(String key, String json) {
+        mSharedEditor.putString(key, json);
+        mSharedEditor.apply();
+    }
 
+    // Helper method that load data.
+    private String loadData(String key) {
+        if (mSharedPreference.contains(key)) {
+            String data = mSharedPreference.getString(key, null);
+            return data;
+        } else {
+            return null;
+        }
+    }
+
+    // Helper method build json string based on current data.
+    private String buildJson() {
+        // id
+        String id = UUID.randomUUID().toString();
+        // title
+        String title = nameInput.getText().toString();
+        // description
+        String description = mDescription.getText().toString();
+
+        Reminder res = new Reminder(id, title, description, null, null, dateString,
+                timeString, null, false);
+        String json = gson.toJson(res);
+        return json;
     }
 
 

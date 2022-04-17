@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences.Editor edit;
     private Gson gson;
 
+    public static WeakReference<MainActivity> weakActivity;
+
     private final ArrayList<Reminder> itemList = new ArrayList<>();
 
     @Override
@@ -45,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
         loadComponent();
         loadListener();
         loadReminders();
+
+        weakActivity = new WeakReference<>(MainActivity.this);
 
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
@@ -133,7 +138,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(rLayoutManger);
     }
 
-
     private void createNewReminder() {
         Reminder newItem = new Reminder();
         itemList.add(0, newItem);
@@ -144,12 +148,29 @@ public class MainActivity extends AppCompatActivity {
         //naviagte to create page
     }
 
-    public void newReminder(View V){
+    private void newReminder(View V){
         //view occupies a rectangular area on the screen and
         // is responsible for drawing and event handling
         //Toast.makeText(getApplicationContext(), "wiggle wiggle", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, createReminder.class);
         startActivity(intent);
+    }
+
+    // get instance of main.
+    public static MainActivity getMyInstanceActivity() {
+        return weakActivity.get();
+    }
+
+
+
+    // Create a task in to list based on the given value.
+    public void createNewReminder(String json) {
+        Reminder newItem = gson.fromJson(json, Reminder.class);
+        itemList.add(0, newItem);
+        rviewAdapter.notifyItemInserted(0);
+        idList.add(newItem.id);
+        saveIdList();
+        saveItem(newItem);
     }
 
 

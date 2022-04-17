@@ -24,7 +24,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
         android:layout_marginEnd="28dp"
-        android:onClick="backtoMain"
         android:text="DONE"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -73,7 +72,7 @@
         app:layout_constraintTop_toBottomOf="@+id/editTextTaskName" />
 
     <EditText
-        android:id="@+id/editTextTextMultiLine"
+        android:id="@+id/description"
         android:layout_width="349dp"
         android:layout_height="154dp"
         android:layout_marginTop="16dp"
@@ -94,7 +93,7 @@
         android:layout_marginStart="28dp"
         android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine"
+        app:layout_constraintTop_toBottomOf="@+id/description"
         app:srcCompat="@drawable/location_foreground" />
 
     <ImageView
@@ -110,8 +109,8 @@
         android:id="@+id/photoImageView"
         android:layout_width="49dp"
         android:layout_height="45dp"
-        app:layout_constraintBottom_toBottomOf="@+id/editTextTextMultiLine"
-        app:layout_constraintEnd_toEndOf="@+id/editTextTextMultiLine"
+        app:layout_constraintBottom_toBottomOf="@+id/description"
+        app:layout_constraintEnd_toEndOf="@+id/description"
         app:srcCompat="@drawable/add_photo_foreground" />
 
 
