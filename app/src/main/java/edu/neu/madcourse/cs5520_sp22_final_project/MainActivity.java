@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         addIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createNewReminder();
+                newReminder(view);
             }
         });
 
@@ -121,7 +121,6 @@ public class MainActivity extends AppCompatActivity {
                 itemList.add(obj);
             }
         }
-
     }
 
     private void createRecyclerView() {
