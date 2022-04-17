@@ -11,6 +11,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 //import android.graphics.Camera;
@@ -33,6 +34,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,6 +60,9 @@ public class createReminder extends AppCompatActivity {
     private EditText description;
     private ImageView mapSelector;
     private Button done;
+    private SharedPreferences mSharedPreference;
+    private SharedPreferences.Editor mSharedEditor;
+    private Gson gson;
 
 
     @Override
@@ -137,6 +143,12 @@ public class createReminder extends AppCompatActivity {
                 showMapSelector();
             }
         });
+
+        // initial local storage.
+        mSharedPreference = getSharedPreferences("reminder_info", MODE_PRIVATE);
+        mSharedEditor = mSharedPreference.edit();
+        // initial gson
+        gson = new Gson();
     }
 
     // This is a helper method to show map selector screen.
@@ -250,7 +262,7 @@ public class createReminder extends AppCompatActivity {
     }
 
     // Helper method that save data in to local storage.
-    private void saveData() {
+    private void saveData(String key, String json) {
 
     }
 
