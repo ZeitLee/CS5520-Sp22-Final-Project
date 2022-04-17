@@ -65,6 +65,7 @@ public class createReminder extends AppCompatActivity {
     private TimePickerDialog.OnTimeSetListener myTimeSetListener;
     private ImageView addPhoto;
     private EditText description;
+    private ImageView mapSelector;
 
 
     @Override
@@ -77,7 +78,7 @@ public class createReminder extends AppCompatActivity {
         myTextDisplayTime = (TextView) findViewById(R.id.timeSelector);
         addPhoto = (ImageView) findViewById(R.id.photoImageView);
         description = (EditText) findViewById(R.id.editTextTextMultiLine);
-
+        mapSelector = (ImageView) findViewById(R.id.mapSelector);
 
 
         initialSetting();
@@ -138,6 +139,20 @@ public class createReminder extends AppCompatActivity {
                 myTextDisplayTime.setText(time);
             }
         };
+
+        // jump to map screen when click this image.
+        mapSelector.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showMapSelector();
+            }
+        });
+    }
+
+    // This is a helper method to show map selector screen.
+    private void showMapSelector() {
+        Intent intent = new Intent(this, LocationActivity.class);
+        startActivity(intent);
     }
 
     // This is a helper method to show date selector screen.

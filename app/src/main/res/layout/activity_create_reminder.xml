@@ -88,7 +88,7 @@
         app:layout_constraintTop_toBottomOf="@+id/dataImageView" />
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/mapSelector"
         android:layout_width="67dp"
         android:layout_height="67dp"
         android:layout_marginStart="28dp"
@@ -103,7 +103,7 @@
         android:layout_height="67dp"
         android:layout_marginStart="28dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3"
+        app:layout_constraintTop_toBottomOf="@+id/mapSelector"
         app:srcCompat="@drawable/people_foreground" />
 
     <ImageView
