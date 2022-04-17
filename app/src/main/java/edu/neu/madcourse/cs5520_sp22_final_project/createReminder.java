@@ -2,15 +2,6 @@ package edu.neu.madcourse.cs5520_sp22_final_project;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.camera.core.CameraSelector;
-import androidx.camera.core.ImageAnalysis;
-import androidx.camera.core.ImageCapture;
-import androidx.camera.core.ImageCaptureException;
-import androidx.camera.core.Preview;
-import androidx.camera.core.Camera;
-import androidx.camera.extensions.HdrImageCaptureExtender;
-import androidx.camera.lifecycle.ProcessCameraProvider;
-import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.lifecycle.LifecycleOwner;
@@ -35,14 +26,13 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
-import com.google.common.util.concurrent.ListenableFuture;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,6 +56,7 @@ public class createReminder extends AppCompatActivity {
     private ImageView addPhoto;
     private EditText description;
     private ImageView mapSelector;
+    private Button done;
 
 
     @Override
@@ -79,10 +70,9 @@ public class createReminder extends AppCompatActivity {
         addPhoto = (ImageView) findViewById(R.id.photoImageView);
         description = (EditText) findViewById(R.id.editTextTextMultiLine);
         mapSelector = (ImageView) findViewById(R.id.mapSelector);
-
+        done = (Button) findViewById(R.id.saveData);
 
         initialSetting();
-
     }
 
     // Go back to the previous screen
@@ -257,6 +247,11 @@ public class createReminder extends AppCompatActivity {
             toast = Toast.makeText(getApplicationContext(), "Image saved successfully!", Toast.LENGTH_SHORT);
             toast.show();
         }
+    }
+
+    // Helper method that save data in to local storage.
+    private void saveData() {
+
     }
 
 
