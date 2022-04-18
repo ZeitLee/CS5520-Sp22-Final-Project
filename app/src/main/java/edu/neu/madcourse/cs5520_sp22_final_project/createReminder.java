@@ -74,12 +74,10 @@ public class createReminder extends AppCompatActivity {
     private SharedPreferences mSharedPreference;
     private SharedPreferences.Editor mSharedEditor;
     private Gson gson;
+    private Reminder reminder;
 
     // id
     private String id;
-    // date and time.
-    private String dateString;
-    private String timeString;
 
     //location
     private Loc loc;
@@ -93,6 +91,7 @@ public class createReminder extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_reminder);
 
+        reminder = new Reminder();
         nameInput = (EditText) findViewById(R.id.editTextTaskName);
         myTextDisplayDate = (TextView) findViewById(R.id.dateSelector);
         myTextDisplayTime = (TextView) findViewById(R.id.timeSelector);
@@ -124,11 +123,9 @@ public class createReminder extends AppCompatActivity {
                         }
                     }
                 });
-
         // Initialization.
         initialSetting();
         initialValue();
-
     }
 
     // Go back to the previous screen
@@ -193,7 +190,8 @@ public class createReminder extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 int showMonth = month + 1; // since the month is 0-based data.
-                dateString = String.format("%d/%d/%d", showMonth, day, year);
+                String dateString = String.format("%d/%d/%d", showMonth, day, year);
+                reminder.date = dateString;
                 myTextDisplayDate.setText(dateString);
             }
         };
@@ -210,7 +208,8 @@ public class createReminder extends AppCompatActivity {
         myTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-                timeString = String.format("%d:%d", hour, minute);
+                String timeString = String.format("%d:%d", hour, minute);
+                reminder.time = timeString;
                 myTextDisplayTime.setText(timeString);
             }
         };
@@ -235,7 +234,6 @@ public class createReminder extends AppCompatActivity {
         // initial local storage.
         mSharedPreference = getSharedPreferences("reminder_info", MODE_PRIVATE);
         mSharedEditor = mSharedPreference.edit();
-        // initial gson
         gson = new Gson();
     }
 
@@ -244,27 +242,20 @@ public class createReminder extends AppCompatActivity {
      */
     private void initialValue() {
         Bundle extras = getIntent().getExtras();
-        id = null;
-        if (extras.containsKey("id")) {
-            id = extras.getString("id");
-        } else {
-            id = UUID.randomUUID().toString();
-        }
-
-        String json = loadData(id);
-        if (json != null) {
-            Reminder reminder = gson.fromJson(json, Reminder.class);
-            // set variables.
+        if (!extras.containsKey("id")) {
             id = reminder.id;
-            dateString = reminder.getDate();
-            timeString = reminder.getTime();
-            address = reminder.location;
-            // set text view.
-            nameInput.setText(reminder.getTitle());
-            mDescription.setText(reminder.getDescription());
-            myTextDisplayDate.setText(dateString);
-            myTextDisplayTime.setText(timeString);
-            locationView.setText(address);
+        } else {
+            id = extras.getString("id");
+            String json = mSharedPreference.getString(id, null);
+            if (json != null) {
+                reminder = gson.fromJson(json, Reminder.class);
+                // set text view.
+                nameInput.setText(reminder.title);
+                mDescription.setText(reminder.description);
+                myTextDisplayDate.setText(reminder.date);
+                myTextDisplayTime.setText(reminder.time);
+                locationView.setText(reminder.location);
+            }
         }
     }
 
@@ -381,47 +372,25 @@ public class createReminder extends AppCompatActivity {
         }
     }
 
-    // Helper method to handle done button.
+    /**
+     * Helper method to handle done button.
+     * convert all data to json and save date to shared preference.
+     * user task id as key.
+     */
     private void settingDone() {
-        // convert all data to json.
         String value = buildJson();
-        // save data to shared preference.
-        // use task id as key.
-        saveData(id, value);
-    }
-
-    // Helper method that save data in to local storage.
-    private void saveData(String key, String json) {
-        mSharedEditor.putString(key, json);
+        mSharedEditor.putString(id, value);
         mSharedEditor.apply();
-    }
-
-    // Helper method that load data.
-    private String loadData(String key) {
-        if (mSharedPreference.contains(key)) {
-            String data = mSharedPreference.getString(key, null);
-            return data;
-        } else {
-            return null;
-        }
     }
 
     // Helper method build json string based on current data.
     private String buildJson() {
-        // title
         String title = nameInput.getText().toString();
-        // give a default name if task name is empty.
-        if ("".equals(title)|| title == null) {
-            title = "Default Task";
-        }
-        // description
-        String description = mDescription.getText().toString();
-
+        reminder.title = !"".equals(title) ? title : "Default Task";
+        reminder.description = mDescription.getText().toString();
+        reminder.location = address;
         //TODO: need to update image path and voice file path.
-        Reminder res = new Reminder(id, title, description, null, null, dateString,
-                timeString, address, false);
-        String json = gson.toJson(res);
-        return json;
+        return gson.toJson(reminder);
     }
 
 

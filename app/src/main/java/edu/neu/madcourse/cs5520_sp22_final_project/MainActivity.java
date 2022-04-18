@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         //TODO: delete this part after implementing click items in the list.
-        //***********************  for testing load.
+        /*
         EditText sk = findViewById(R.id.storageKey);
         sk.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
                 mockButton(sk.getText().toString());
             }
         });
-        // *********** ****************
+         */
 
         weakActivity = new WeakReference<>(MainActivity.this);
 
@@ -177,6 +177,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // mock button for testing load data.
+    /*
     private void mockButton(String key) {
         if (!mSharedPreferences.contains(key)) {
             Intent i = new Intent(this, createReminder.class);
@@ -189,5 +190,5 @@ public class MainActivity extends AppCompatActivity {
         i.putExtra("keyName", key);
         startActivity(i);
     }
-
+    */
 }

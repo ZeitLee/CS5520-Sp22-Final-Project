@@ -36,6 +36,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderViewHolder> {
         Reminder item = itemList.get(position);
         holder.id = item.id;
         holder.title.setText(item.title);
+        holder.deadline.setText(item.date + "  " + item.time);
         holder.itemCheck.setChecked(item.completed);
 
 
@@ -50,9 +51,12 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderViewHolder> {
 
         if (holder.itemCheck.isChecked()) {
             holder.title.setPaintFlags(holder.title.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.deadline.setPaintFlags(holder.deadline.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
 
         } else {
             holder.title.setPaintFlags(holder.title.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            holder.deadline.setPaintFlags(holder.deadline.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
         }
 
         holder.itemCheck.setOnClickListener(new View.OnClickListener() {
