@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -53,11 +54,11 @@ public class MainActivity extends AppCompatActivity {
 
         //TODO: delete this part after implementing click items in the list.
         //***********************  for testing load.
-        Button b3 = (Button) findViewById(R.id.button3);
-        b3.setOnClickListener(new View.OnClickListener() {
+        EditText sk = findViewById(R.id.storageKey);
+        sk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mockButton();
+                mockButton(sk.getText().toString());
             }
         });
 
@@ -186,12 +187,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // mock button for testing load data.
-    private void mockButton() {
-
-        String key = "t1"; // this is the task name.
+    private void mockButton(String key) {
+        if (!mSharedPreferences.contains(key)) {
+            Intent i = new Intent(this, createReminder.class);
+            startActivity(i);
+            return;
+        }
         String data = mSharedPreferences.getString(key, null);
         Intent i = new Intent(this, createReminder.class);
         i.putExtra(key, data);
+        i.putExtra("keyName", key);
         startActivity(i);
     }
 

@@ -46,12 +46,14 @@
             android:layout_marginEnd="23dp"
             android:gravity="end">
 
-            <Button
-                android:id="@+id/button3"
+            <EditText
+                android:id="@+id/storageKey"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Button" />
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="input" />
 
             <ImageView
                 android:id="@+id/add_icon"

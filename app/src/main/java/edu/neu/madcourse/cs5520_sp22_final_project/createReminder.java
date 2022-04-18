@@ -172,7 +172,8 @@ public class createReminder extends AppCompatActivity {
     private void initialValue() {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            String json = extras.getString("t1");
+            String key = extras.getString("keyName");
+            String json = extras.getString(key);
             Reminder reminder = gson.fromJson(json, Reminder.class);
             // set variables.
             dateString = reminder.getDate();
@@ -305,7 +306,7 @@ public class createReminder extends AppCompatActivity {
         saveData(taskName, value);
         // create a new task in main.
         // only create when task name is not empty and not same task name in local storage.
-        if (!taskName.isEmpty() && !mSharedPreference.contains(taskName)) {
+        if (!taskName.isEmpty()) {
             MainActivity.getMyInstanceActivity().createNewReminder(value);
         }
     }
