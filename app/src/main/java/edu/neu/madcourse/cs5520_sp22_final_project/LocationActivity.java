@@ -19,7 +19,7 @@ import edu.neu.madcourse.cs5520_sp22_final_project.Location.Loc;
 public class LocationActivity extends AppCompatActivity {
     private Loc loc;
     private String address;
-    TextView view;
+    TextView locationView;
     ActivityResultLauncher<Intent> intentActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -32,7 +32,7 @@ public class LocationActivity extends AppCompatActivity {
                     if (result.getResultCode() == 1) {
                         assert result.getData() != null;
                         address = result.getData().getStringExtra("address");
-                        view.setText(address);
+                        locationView.setText(address);
                     }
                 }
             });
@@ -42,8 +42,8 @@ public class LocationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location);
         loc = new Loc(this);
-        view = findViewById(R.id.textView);
-        loc.setViewLocation(view);
+        locationView = findViewById(R.id.textView);
+        loc.setViewLocation(locationView);
         address = "";
     }
 

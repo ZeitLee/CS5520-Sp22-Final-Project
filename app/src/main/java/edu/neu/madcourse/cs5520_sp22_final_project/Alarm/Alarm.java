@@ -18,10 +18,11 @@ public class Alarm {
     /**
      * trigger alarm based on date and msg
      */
-    public void fireAlarm(String msg) {
+    public void fireAlarm(String msg, int year, int month, int day, int hour, int min) {
         Calendar calendar = Calendar.getInstance();
         //month is 0-indexed
-        calendar.set(2022, 4 - 1 , 14, 21, 15, 0);
+        System.out.println(msg + "" + year + ", " + month + ", " + day + ", " + hour + ", " + min);
+        calendar.set(year, month - 1 , day, hour, min, 0);
 
         System.out.println("+++++++++++++++++");
         System.out.println("calendar" + calendar.getTimeInMillis());
@@ -29,9 +30,7 @@ public class Alarm {
         System.out.println("+++++++++++++++++");
 
         Intent intent = new Intent(context, Receiver.class);
-        Bundle b = new Bundle();
-        b.putString("msg", msg);
-        intent.putExtras(b);
+        intent.putExtra("msg", msg);
         PendingIntent pItent = PendingIntent.getBroadcast(context, 0, intent, 0);
         AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
