@@ -29,8 +29,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        loc = (double[]) getIntent().getSerializableExtra("loc");
-        address = getIntent().getStringExtra("address");
+        loc = getIntent().getDoubleArrayExtra("loc");
+        Loc.geoToAddress(loc[0], loc[1], MapActivity.this);
         System.out.println("+++++++++++++++++");
         System.out.println("Map address");
         System.out.println(address);
@@ -46,7 +46,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         System.out.println("+++++++++++++++");
         System.out.println("back");
         Intent returnIntent = new Intent();
-        returnIntent.putExtra("address", address);
+        returnIntent.putExtra("address", loc);
         setResult(1, returnIntent);
         super.onBackPressed();
         finish();
@@ -54,7 +54,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        LatLng currLoc = new LatLng(loc[1], loc[0]);
+        LatLng currLoc = new LatLng(loc[0], loc[1]);
         googleMap.addMarker(new MarkerOptions()
                 .position(currLoc)
                 .title(address));
@@ -65,6 +65,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             public void onMapClick(@NonNull LatLng latLng) {
                 MarkerOptions option = new MarkerOptions();
                 address = Loc.geoToAddress(latLng.latitude, latLng.longitude, MapActivity.this);
+                loc[0] = latLng.latitude;
+                loc[1] = latLng.longitude;
                 option.position(latLng)
                         .title(address);
                 googleMap.clear();

@@ -82,6 +82,7 @@ public class createReminder extends AppCompatActivity {
     //location
     private Loc loc;
     private String address;
+    private double[] geoLoc;
     TextView locationView;
     ActivityResultLauncher<Intent> intentActivityResultLauncher;
 
@@ -107,6 +108,7 @@ public class createReminder extends AppCompatActivity {
         // create menu.(Zesheng)
         //loc.setViewLocation(locationView);
 
+        geoLoc = new double[2];
         address = "";
         intentActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -118,8 +120,8 @@ public class createReminder extends AppCompatActivity {
                         System.out.println(result.getResultCode());
                         if (result.getResultCode() == 1) {
                             assert result.getData() != null;
-                            address = result.getData().getStringExtra("address");
-                            locationView.setText(address);
+                            geoLoc = result.getData().getDoubleArrayExtra("address");
+                            locationView.setText(Loc.geoToAddress(geoLoc[0], geoLoc[1], createReminder.this));
                         }
                     }
                 });
@@ -147,7 +149,6 @@ public class createReminder extends AppCompatActivity {
         System.out.println(Arrays.toString(timeSplit));
         String des = mDescription.getText().toString();
         System.out.println(des);
-        System.out.println(address);
         new Alarm(this).fireAlarm(des, dateSplit[2],
                 dateSplit[0], dateSplit[1], timeSplit[0], timeSplit[1]);
         Intent intent = new Intent(this, MainActivity.class);
@@ -254,7 +255,9 @@ public class createReminder extends AppCompatActivity {
                 mDescription.setText(reminder.description);
                 myTextDisplayDate.setText(reminder.date);
                 myTextDisplayTime.setText(reminder.time);
-                locationView.setText(reminder.location);
+                address = Loc.geoToAddress(reminder.location[0], reminder.location[1], this);
+                geoLoc = new double[]{reminder.location[0], reminder.location[1]};
+                locationView.setText(address);
             }
         }
     }
@@ -262,9 +265,7 @@ public class createReminder extends AppCompatActivity {
     // This is a helper method to show map selector screen.
     private void showMapSelector() {
         Intent intent = new Intent(this, MapActivity.class);
-        address = loc.getAddress();
-        intent.putExtra("loc", (Serializable) loc.getGeoLoc());
-        intent.putExtra("address", address);
+        intent.putExtra("loc", geoLoc);
         intentActivityResultLauncher.launch(intent);
     }
 
@@ -388,20 +389,10 @@ public class createReminder extends AppCompatActivity {
         String title = nameInput.getText().toString();
         reminder.title = !"".equals(title) ? title : "Default Task";
         reminder.description = mDescription.getText().toString();
-        reminder.location = address;
+        reminder.location = geoLoc;
         //TODO: need to update image path and voice file path.
         return gson.toJson(reminder);
     }
-
-
-
-
-
-
-
-
-
-
 
 }
 

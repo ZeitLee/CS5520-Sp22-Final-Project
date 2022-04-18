@@ -14,7 +14,7 @@ public class Reminder {
     public Voice voice;
     public String date;
     public String time;
-    public String location;
+    public double[] location;
     public boolean completed;
 
     public Reminder() {
@@ -25,12 +25,12 @@ public class Reminder {
         voice = null;
         date = "";
         time = "";
-        location = null;
+        location = new double[2];
         completed = false;
     }
 
     public Reminder(String id, String title, String description, String image, Voice voice, String date,
-                    String time, String location, boolean complete) {
+                    String time, double[] location, boolean complete) {
         this.id = id;
         this.title = title;
         this.description = description;
