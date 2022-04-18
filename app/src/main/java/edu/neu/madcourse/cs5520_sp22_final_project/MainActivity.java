@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import edu.neu.madcourse.cs5520_sp22_final_project.Location.Loc;
 import edu.neu.madcourse.cs5520_sp22_final_project.models.Reminder;
 
 import android.content.Intent;
@@ -41,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences.Editor edit;
     private Gson gson;
 
+    //location
+    private Loc loc;
+
     public static WeakReference<MainActivity> weakActivity;
 
     private final ArrayList<Reminder> itemList = new ArrayList<>();
@@ -49,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        loc = new Loc(this);
         loadComponent();
         loadListener();
         loadReminders();
@@ -168,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
     public void jumpToReminder(String id) {
         Intent i = new Intent(this, createReminder.class);
         i.putExtra("id", id);
+        i.putExtra("loc", loc.getGeoLoc());
         startActivity(i);
     }
 

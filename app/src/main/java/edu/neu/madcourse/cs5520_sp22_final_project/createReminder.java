@@ -83,6 +83,7 @@ public class createReminder extends AppCompatActivity {
     private Loc loc;
     private String address;
     private double[] geoLoc;
+    private double[] currLoc;
     TextView locationView;
     ActivityResultLauncher<Intent> intentActivityResultLauncher;
 
@@ -106,9 +107,9 @@ public class createReminder extends AppCompatActivity {
         locationView = findViewById(R.id.location);
         //TODO: I just comment this line because it will always show the default location at the
         // create menu.(Zesheng)
-        //loc.setViewLocation(locationView);
 
         geoLoc = new double[2];
+        currLoc = getIntent().getDoubleArrayExtra("loc");
         address = "";
         intentActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -128,6 +129,12 @@ public class createReminder extends AppCompatActivity {
         // Initialization.
         initialSetting();
         initialValue();
+
+        System.out.println("geoloc");
+        System.out.println(Arrays.toString(geoLoc));
+        if (geoLoc[0] == 0 && geoLoc[1] == 0) {
+            locationView.setText(Loc.geoToAddress(currLoc[0], currLoc[1], this));
+        }
     }
 
     // Go back to the previous screen
@@ -265,7 +272,11 @@ public class createReminder extends AppCompatActivity {
     // This is a helper method to show map selector screen.
     private void showMapSelector() {
         Intent intent = new Intent(this, MapActivity.class);
-        intent.putExtra("loc", geoLoc);
+        if (geoLoc[0] == 0 && geoLoc[1] == 0) {
+            intent.putExtra("loc", loc.getGeoLoc());
+        } else {
+            intent.putExtra("loc", geoLoc);
+        }
         intentActivityResultLauncher.launch(intent);
     }
 
