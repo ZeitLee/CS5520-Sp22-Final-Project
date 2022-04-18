@@ -1,5 +1,6 @@
 package edu.neu.madcourse.cs5520_sp22_final_project;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
@@ -40,7 +41,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderViewHolder> {
         holder.currentItemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                //TODO: send id to create screen.
             }
         });
 

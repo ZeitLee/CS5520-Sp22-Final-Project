@@ -14,7 +14,7 @@ public class Reminder {
     public Voice voice;
     public String date;
     public String time;
-    public Location location;
+    public String location;
     public boolean completed;
 
     public Reminder() {
@@ -30,7 +30,7 @@ public class Reminder {
     }
 
     public Reminder(String id, String title, String description, Image image, Voice voice, String date,
-                    String time, Location location, boolean complete) {
+                    String time, String location, boolean complete) {
         this.id = id;
         this.title = title;
         this.description = description;

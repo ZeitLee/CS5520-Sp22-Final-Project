@@ -61,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
                 mockButton(sk.getText().toString());
             }
         });
-
         // *********** ****************
 
         weakActivity = new WeakReference<>(MainActivity.this);
