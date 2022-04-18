@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.google.gson.Gson;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
@@ -41,7 +42,8 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderViewHolder> {
         holder.currentItemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: send id to create screen.
+                // send id to create screen.
+                MainActivity.getMyInstanceActivity().jumpToReminder(item.id);
             }
         });
 

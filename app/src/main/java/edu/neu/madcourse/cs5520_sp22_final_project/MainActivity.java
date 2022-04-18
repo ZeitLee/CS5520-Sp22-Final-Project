@@ -18,6 +18,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.ref.WeakReference;
@@ -65,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
 
         weakActivity = new WeakReference<>(MainActivity.this);
 
-
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
                 new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.LEFT) {
                     @Override
@@ -106,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         addIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                newReminder(view);
+                createNewReminder();
             }
         });
 
@@ -159,30 +160,20 @@ public class MainActivity extends AppCompatActivity {
         idList.add(newItem.id);
         saveIdList();
         saveItem(newItem);
-        //naviagte to create page
+        //naviagte to create page.
+        String id = newItem.id;
+        jumpToReminder(id);
     }
 
-    private void newReminder(View V){
-        //view occupies a rectangular area on the screen and
-        // is responsible for drawing and event handling
-        //Toast.makeText(getApplicationContext(), "wiggle wiggle", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(this, createReminder.class);
-        startActivity(intent);
+    public void jumpToReminder(String id) {
+        Intent i = new Intent(this, createReminder.class);
+        i.putExtra("id", id);
+        startActivity(i);
     }
 
     // get instance of main.
     public static MainActivity getMyInstanceActivity() {
         return weakActivity.get();
-    }
-
-    // Create a task in to list based on the given value.
-    public void createNewReminder(String json) {
-        Reminder newItem = gson.fromJson(json, Reminder.class);
-        itemList.add(0, newItem);
-        rviewAdapter.notifyItemInserted(0);
-        idList.add(newItem.id);
-        saveIdList();
-        saveItem(newItem);
     }
 
     // mock button for testing load data.

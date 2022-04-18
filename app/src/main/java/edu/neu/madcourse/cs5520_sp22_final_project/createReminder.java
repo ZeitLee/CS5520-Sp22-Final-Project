@@ -75,6 +75,9 @@ public class createReminder extends AppCompatActivity {
     private SharedPreferences.Editor mSharedEditor;
     private Gson gson;
 
+    // id
+    private String id;
+    // date and time.
     private String dateString;
     private String timeString;
 
@@ -101,7 +104,10 @@ public class createReminder extends AppCompatActivity {
         //location
         loc = new Loc(this);
         locationView = findViewById(R.id.location);
-        loc.setViewLocation(locationView);
+        //TODO: I just comment this line because it will always show the default location at the
+        // create menu.(Zesheng)
+        //loc.setViewLocation(locationView);
+
         address = "";
         intentActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -119,9 +125,10 @@ public class createReminder extends AppCompatActivity {
                     }
                 });
 
+        // Initialization.
         initialSetting();
-
         initialValue();
+
     }
 
     // Go back to the previous screen
@@ -129,7 +136,7 @@ public class createReminder extends AppCompatActivity {
         System.out.println("back to main");
         String date = ((TextView)findViewById(R.id.dateSelector)).getText().toString();
         String time = ((TextView)findViewById(R.id.timeSelector)).getText().toString();
-        if(date.equals("") || time.equals("")) {
+        if("".equals(date) || "".equals(time)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("time or date cannot be empty")
                     .setCancelable(true)
@@ -143,6 +150,7 @@ public class createReminder extends AppCompatActivity {
         System.out.println(Arrays.toString(timeSplit));
         String des = mDescription.getText().toString();
         System.out.println(des);
+        System.out.println(address);
         new Alarm(this).fireAlarm(des, dateSplit[2],
                 dateSplit[0], dateSplit[1], timeSplit[0], timeSplit[1]);
         Intent intent = new Intent(this, MainActivity.class);
@@ -236,18 +244,27 @@ public class createReminder extends AppCompatActivity {
      */
     private void initialValue() {
         Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            String key = extras.getString("keyName");
-            String json = extras.getString(key);
+        id = null;
+        if (extras.containsKey("id")) {
+            id = extras.getString("id");
+        } else {
+            id = UUID.randomUUID().toString();
+        }
+
+        String json = loadData(id);
+        if (json != null) {
             Reminder reminder = gson.fromJson(json, Reminder.class);
             // set variables.
+            id = reminder.id;
             dateString = reminder.getDate();
             timeString = reminder.getTime();
+            address = reminder.location;
             // set text view.
             nameInput.setText(reminder.getTitle());
             mDescription.setText(reminder.getDescription());
             myTextDisplayDate.setText(dateString);
             myTextDisplayTime.setText(timeString);
+            locationView.setText(address);
         }
     }
 
@@ -369,14 +386,8 @@ public class createReminder extends AppCompatActivity {
         // convert all data to json.
         String value = buildJson();
         // save data to shared preference.
-        // use task name as key.
-        String taskName = nameInput.getText().toString();
-        saveData(taskName, value);
-        // create a new task in main.
-        // only create when task name is not empty and not same task name in local storage.
-        if (!taskName.isEmpty()) {
-            MainActivity.getMyInstanceActivity().createNewReminder(value);
-        }
+        // use task id as key.
+        saveData(id, value);
     }
 
     // Helper method that save data in to local storage.
@@ -397,16 +408,18 @@ public class createReminder extends AppCompatActivity {
 
     // Helper method build json string based on current data.
     private String buildJson() {
-        // id
-        String id = UUID.randomUUID().toString();
         // title
         String title = nameInput.getText().toString();
+        // give a default name if task name is empty.
+        if ("".equals(title)|| title == null) {
+            title = "Default Task";
+        }
         // description
         String description = mDescription.getText().toString();
 
         //TODO: need to update image path and voice file path.
         Reminder res = new Reminder(id, title, description, null, null, dateString,
-                timeString, null, false);
+                timeString, address, false);
         String json = gson.toJson(res);
         return json;
     }
