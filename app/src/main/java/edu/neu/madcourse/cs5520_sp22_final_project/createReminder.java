@@ -83,6 +83,8 @@ public class createReminder extends AppCompatActivity {
         done = (Button) findViewById(R.id.saveData);
 
         initialSetting();
+
+        initialValue();
     }
 
     // Go back to the previous screen
@@ -162,6 +164,25 @@ public class createReminder extends AppCompatActivity {
         mSharedEditor = mSharedPreference.edit();
         // initial gson
         gson = new Gson();
+    }
+
+    /**
+     * Initial value if we enter a existing task.
+     */
+    private void initialValue() {
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String json = extras.getString("t1");
+            Reminder reminder = gson.fromJson(json, Reminder.class);
+            // set variables.
+            dateString = reminder.getDate();
+            timeString = reminder.getTime();
+            // set text view.
+            nameInput.setText(reminder.getTitle());
+            mDescription.setText(reminder.getDescription());
+            myTextDisplayDate.setText(dateString);
+            myTextDisplayTime.setText(timeString);
+        }
     }
 
     // This is a helper method to show map selector screen.
@@ -280,9 +301,13 @@ public class createReminder extends AppCompatActivity {
         String value = buildJson();
         // save data to shared preference.
         // use task name as key.
-        saveData(nameInput.getText().toString(), value);
+        String taskName = nameInput.getText().toString();
+        saveData(taskName, value);
         // create a new task in main.
-        MainActivity.getMyInstanceActivity().createNewReminder(value);
+        // only create when task name is not empty and not same task name in local storage.
+        if (!taskName.isEmpty() && !mSharedPreference.contains(taskName)) {
+            MainActivity.getMyInstanceActivity().createNewReminder(value);
+        }
     }
 
     // Helper method that save data in to local storage.
@@ -310,6 +335,7 @@ public class createReminder extends AppCompatActivity {
         // description
         String description = mDescription.getText().toString();
 
+        //TODO: need to update image path and voice file path.
         Reminder res = new Reminder(id, title, description, null, null, dateString,
                 timeString, null, false);
         String json = gson.toJson(res);

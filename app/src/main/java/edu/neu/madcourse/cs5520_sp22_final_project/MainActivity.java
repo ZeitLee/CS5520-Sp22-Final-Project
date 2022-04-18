@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -48,6 +49,19 @@ public class MainActivity extends AppCompatActivity {
         loadComponent();
         loadListener();
         loadReminders();
+
+
+        //TODO: delete this part after implementing click items in the list.
+        //***********************  for testing load.
+        Button b3 = (Button) findViewById(R.id.button3);
+        b3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mockButton();
+            }
+        });
+
+        // *********** ****************
 
         weakActivity = new WeakReference<>(MainActivity.this);
 
@@ -161,8 +175,6 @@ public class MainActivity extends AppCompatActivity {
         return weakActivity.get();
     }
 
-
-
     // Create a task in to list based on the given value.
     public void createNewReminder(String json) {
         Reminder newItem = gson.fromJson(json, Reminder.class);
@@ -173,5 +185,14 @@ public class MainActivity extends AppCompatActivity {
         saveItem(newItem);
     }
 
+    // mock button for testing load data.
+    private void mockButton() {
+
+        String key = "t1"; // this is the task name.
+        String data = mSharedPreferences.getString(key, null);
+        Intent i = new Intent(this, createReminder.class);
+        i.putExtra(key, data);
+        startActivity(i);
+    }
 
 }

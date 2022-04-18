@@ -41,4 +41,20 @@ public class Reminder {
         this.location = location;
         this.completed = complete;
     }
+
+    public String getTitle() {
+        return this.title;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public String getDate() {
+        return this.date;
+    }
+
+    public String getTime() {
+        return this.time;
+    }
 }
