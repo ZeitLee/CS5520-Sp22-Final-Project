@@ -1,5 +1,9 @@
 package edu.neu.madcourse.cs5520_sp22_final_project;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -7,6 +11,7 @@ import androidx.core.content.FileProvider;
 import androidx.lifecycle.LifecycleOwner;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.ActivityNotFoundException;
@@ -39,7 +44,9 @@ import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -49,6 +56,9 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import edu.neu.madcourse.cs5520_sp22_final_project.models.Reminder;
+
+import edu.neu.madcourse.cs5520_sp22_final_project.Alarm.Alarm;
+import edu.neu.madcourse.cs5520_sp22_final_project.Location.Loc;
 
 public class createReminder extends AppCompatActivity {
 
@@ -68,6 +78,12 @@ public class createReminder extends AppCompatActivity {
     private String dateString;
     private String timeString;
 
+    //location
+    private Loc loc;
+    private String address;
+    TextView locationView;
+    ActivityResultLauncher<Intent> intentActivityResultLauncher;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +98,27 @@ public class createReminder extends AppCompatActivity {
         mapSelector = (ImageView) findViewById(R.id.mapSelector);
         done = (Button) findViewById(R.id.saveData);
 
+        //location
+        loc = new Loc(this);
+        locationView = findViewById(R.id.location);
+        loc.setViewLocation(locationView);
+        address = "";
+        intentActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        System.out.println("+++++++++");
+                        System.out.println("get back");
+                        System.out.println(result.getResultCode());
+                        if (result.getResultCode() == 1) {
+                            assert result.getData() != null;
+                            address = result.getData().getStringExtra("address");
+                            locationView.setText(address);
+                        }
+                    }
+                });
+
         initialSetting();
 
         initialValue();
@@ -89,8 +126,36 @@ public class createReminder extends AppCompatActivity {
 
     // Go back to the previous screen
     public void backtoMain(View V){
+        System.out.println("back to main");
+        String date = ((TextView)findViewById(R.id.dateSelector)).getText().toString();
+        String time = ((TextView)findViewById(R.id.timeSelector)).getText().toString();
+        if(date.equals("") || time.equals("")) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("time or date cannot be empty")
+                    .setCancelable(true)
+                    .create()
+                    .show();
+            return;
+        }
+        int[] dateSplit = toIntArray(date.split("/"));
+        System.out.println(Arrays.toString(dateSplit));
+        int[] timeSplit = toIntArray(time.split(":"));
+        System.out.println(Arrays.toString(timeSplit));
+        String des = mDescription.getText().toString();
+        System.out.println(des);
+        new Alarm(this).fireAlarm(des, dateSplit[2],
+                dateSplit[0], dateSplit[1], timeSplit[0], timeSplit[1]);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+    }
+
+    //help converting string array to int array
+    private int[] toIntArray(String[] strings) {
+        int[] result = new int[strings.length];
+        for(int i = 0; i < strings.length; i ++) {
+           result[i] = Integer.parseInt(strings[i]);
+        }
+        return result;
     }
 
     /**
@@ -188,8 +253,11 @@ public class createReminder extends AppCompatActivity {
 
     // This is a helper method to show map selector screen.
     private void showMapSelector() {
-        Intent intent = new Intent(this, LocationActivity.class);
-        startActivity(intent);
+        Intent intent = new Intent(this, MapActivity.class);
+        address = loc.getAddress();
+        intent.putExtra("loc", (Serializable) loc.getGeoLoc());
+        intent.putExtra("address", address);
+        intentActivityResultLauncher.launch(intent);
     }
 
     // This is a helper method to show date selector screen.

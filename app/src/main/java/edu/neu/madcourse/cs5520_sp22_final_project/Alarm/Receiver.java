@@ -11,8 +11,7 @@ public class Receiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         System.out.println("receiver: ");
-        Bundle b = intent.getExtras();
-        System.out.println(b.getString("msg"));
-        new Notification(context).notification(b.getString("msg"));
+        System.out.println(intent.getStringExtra("msg"));
+        new Notification(context).notification(intent.getStringExtra("msg"));
     }
 }
