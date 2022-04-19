@@ -64,6 +64,7 @@ public class createReminder extends AppCompatActivity {
 
     private EditText nameInput;
     private EditText mDescription;
+    private EditText mHashtag;
     private TextView myTextDisplayDate;
     private TextView myTextDisplayTime;
     private DatePickerDialog.OnDateSetListener myDateSetListener;
@@ -99,6 +100,7 @@ public class createReminder extends AppCompatActivity {
         myTextDisplayTime = (TextView) findViewById(R.id.timeSelector);
         addPhoto = (ImageView) findViewById(R.id.photoImageView);
         mDescription = (EditText) findViewById(R.id.description);
+        mHashtag = (EditText) findViewById(R.id.hashTag);
         mapSelector = (ImageView) findViewById(R.id.mapSelector);
         done = (Button) findViewById(R.id.saveData);
 
@@ -260,6 +262,7 @@ public class createReminder extends AppCompatActivity {
                 // set text view.
                 nameInput.setText(reminder.title);
                 mDescription.setText(reminder.description);
+                mHashtag.setText(reminder.hashtag);
                 myTextDisplayDate.setText(reminder.date);
                 myTextDisplayTime.setText(reminder.time);
                 address = Loc.geoToAddress(reminder.location[0], reminder.location[1], this);
@@ -400,6 +403,7 @@ public class createReminder extends AppCompatActivity {
         String title = nameInput.getText().toString();
         reminder.title = !"".equals(title) ? title : "Default Task";
         reminder.description = mDescription.getText().toString();
+        reminder.hashtag = mHashtag.getText().toString();
         reminder.location = geoLoc;
         //TODO: need to update image path and voice file path.
         return gson.toJson(reminder);

@@ -6,6 +6,21 @@
     android:layout_height="match_parent"
     tools:context=".createReminder">
 
+    <EditText
+        android:id="@+id/hashTag"
+        android:layout_width="254dp"
+        android:layout_height="39dp"
+        android:layout_marginTop="516dp"
+        android:ems="10"
+        android:hint="Add Hashtag"
+        android:inputType="textPersonName"
+        android:text=""
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.668"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/saveData" />
+
     <TextView
         android:id="@+id/dateSelector"
         android:layout_width="wrap_content"
@@ -126,6 +141,16 @@
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/mapSelector"
         app:layout_constraintTop_toBottomOf="@+id/description" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="67dp"
+        android:layout_height="67dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.081"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView4"
+        app:srcCompat="@drawable/hash_foreground" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

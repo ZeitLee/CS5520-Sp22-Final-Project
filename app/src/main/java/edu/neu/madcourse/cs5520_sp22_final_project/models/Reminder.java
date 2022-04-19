@@ -14,6 +14,7 @@ public class Reminder {
     public Voice voice;
     public String date;
     public String time;
+    public String hashtag;
     public double[] location;
     public boolean completed;
 
@@ -21,6 +22,7 @@ public class Reminder {
         id = UUID.randomUUID().toString();
         title = "Task Name";
         description = "";
+        hashtag = "";
         image = null;
         voice = null;
         date = "";
@@ -29,11 +31,13 @@ public class Reminder {
         completed = false;
     }
 
-    public Reminder(String id, String title, String description, String image, Voice voice, String date,
+    public Reminder(String id, String title, String description, String hashtag, String image,
+                    Voice voice, String date,
                     String time, double[] location, boolean complete) {
         this.id = id;
         this.title = title;
         this.description = description;
+        this.hashtag = hashtag;
         this.image = image;
         this.voice = voice;
         this.date = date;
