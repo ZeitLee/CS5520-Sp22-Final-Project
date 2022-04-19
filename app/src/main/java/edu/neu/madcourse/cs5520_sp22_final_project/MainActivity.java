@@ -60,17 +60,6 @@ public class MainActivity extends AppCompatActivity {
         loadReminders();
 
 
-        //TODO: delete this part after implementing click items in the list.
-        /*
-        EditText sk = findViewById(R.id.storageKey);
-        sk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mockButton(sk.getText().toString());
-            }
-        });
-         */
-
         weakActivity = new WeakReference<>(MainActivity.this);
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
@@ -183,19 +172,4 @@ public class MainActivity extends AppCompatActivity {
         return weakActivity.get();
     }
 
-    // mock button for testing load data.
-    /*
-    private void mockButton(String key) {
-        if (!mSharedPreferences.contains(key)) {
-            Intent i = new Intent(this, createReminder.class);
-            startActivity(i);
-            return;
-        }
-        String data = mSharedPreferences.getString(key, null);
-        Intent i = new Intent(this, createReminder.class);
-        i.putExtra(key, data);
-        i.putExtra("keyName", key);
-        startActivity(i);
-    }
-    */
 }

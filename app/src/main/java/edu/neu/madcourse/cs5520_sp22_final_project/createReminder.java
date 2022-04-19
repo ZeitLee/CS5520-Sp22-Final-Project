@@ -401,7 +401,7 @@ public class createReminder extends AppCompatActivity {
     // Helper method build json string based on current data.
     private String buildJson() {
         String title = nameInput.getText().toString();
-        reminder.title = !"".equals(title) ? title : "Default Task";
+        reminder.title = !"".equals(title) ? title : "Task Name";
         reminder.description = mDescription.getText().toString();
         reminder.hashtag = mHashtag.getText().toString();
         reminder.location = geoLoc;
