@@ -135,7 +135,11 @@ public class createReminder extends AppCompatActivity {
         System.out.println("geoloc");
         System.out.println(Arrays.toString(geoLoc));
         if (geoLoc[0] == 0 && geoLoc[1] == 0) {
-            locationView.setText(Loc.geoToAddress(currLoc[0], currLoc[1], this));
+            if (currLoc[0] == 0 && currLoc[1] == 0) {
+                loc.setViewLocation(locationView);
+            } else {
+                locationView.setText(Loc.geoToAddress(currLoc[0], currLoc[1], this));
+            }
         }
     }
 
