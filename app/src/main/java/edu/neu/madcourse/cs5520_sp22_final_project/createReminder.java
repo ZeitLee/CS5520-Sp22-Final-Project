@@ -88,6 +88,9 @@ public class createReminder extends AppCompatActivity {
     TextView locationView;
     ActivityResultLauncher<Intent> intentActivityResultLauncher;
 
+    //alarm id
+    private int Alarm_No;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,8 +165,9 @@ public class createReminder extends AppCompatActivity {
         System.out.println(Arrays.toString(timeSplit));
         String des = mDescription.getText().toString();
         System.out.println(des);
-        new Alarm(this).fireAlarm(des, dateSplit[2],
+        Alarm_No = new Alarm(MainActivity.getMyInstanceActivity()).fireAlarm(des, dateSplit[2],
                 dateSplit[0], dateSplit[1], timeSplit[0], timeSplit[1]);
+        System.out.println("Alarm_No in create " + Alarm_No);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
@@ -240,8 +244,8 @@ public class createReminder extends AppCompatActivity {
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                settingDone();
                 backtoMain(view);
+                settingDone();
             }
         });
 
@@ -409,6 +413,7 @@ public class createReminder extends AppCompatActivity {
         reminder.description = mDescription.getText().toString();
         reminder.hashtag = mHashtag.getText().toString();
         reminder.location = geoLoc;
+        reminder.Alarm_No = Alarm_No;
         //TODO: need to update image path and voice file path.
         return gson.toJson(reminder);
     }

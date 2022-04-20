@@ -6,9 +6,13 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import edu.neu.madcourse.cs5520_sp22_final_project.Alarm.Receiver;
 import edu.neu.madcourse.cs5520_sp22_final_project.Location.Loc;
 import edu.neu.madcourse.cs5520_sp22_final_project.models.Reminder;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -81,6 +85,15 @@ public class MainActivity extends AppCompatActivity {
                     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                         int position = viewHolder.getLayoutPosition();
                         String id = itemList.get(position).id;
+
+                        //Cancel alarm
+                        int Alarm_No = itemList.get(position).Alarm_No;
+                        System.out.println("Alarm_no in Swipe" + Alarm_No);
+                        Intent intent = new Intent(MainActivity.this, Receiver.class);
+                        PendingIntent pItent = PendingIntent.getBroadcast(MainActivity.this, Alarm_No, intent, 0);
+                        AlarmManager alarm = (AlarmManager) MainActivity.this.getSystemService(Context.ALARM_SERVICE);
+                        alarm.cancel(pItent);
+
                         edit.remove(id).commit();
                         idList.remove(id);
                         itemList.remove(position);

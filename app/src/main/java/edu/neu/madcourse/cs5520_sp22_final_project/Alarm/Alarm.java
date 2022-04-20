@@ -7,9 +7,12 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import java.util.Calendar;
+import java.util.Random;
+import java.util.UUID;
 
 public class Alarm {
     private final Context context;
+    private final int ALARM_NO = 10000000 + new Random().nextInt(900000000);
 
     public Alarm(Context context) {
         this.context = context;
@@ -18,7 +21,7 @@ public class Alarm {
     /**
      * trigger alarm based on date and msg
      */
-    public void fireAlarm(String msg, int year, int month, int day, int hour, int min) {
+    public int fireAlarm(String msg, int year, int month, int day, int hour, int min) {
         Calendar calendar = Calendar.getInstance();
         //month is 0-indexed
         System.out.println(msg + "" + year + ", " + month + ", " + day + ", " + hour + ", " + min);
@@ -31,9 +34,12 @@ public class Alarm {
 
         Intent intent = new Intent(context, Receiver.class);
         intent.putExtra("msg", msg);
-        PendingIntent pItent = PendingIntent.getBroadcast(context, 0, intent, 0);
+        System.out.println("Alarm_No: " + ALARM_NO);
+        PendingIntent pItent = PendingIntent.getBroadcast(context, ALARM_NO, intent, 0);
         AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
         alarm.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pItent);
+
+        return ALARM_NO;
     }
 }
