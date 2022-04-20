@@ -25,6 +25,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -76,6 +77,7 @@ public class createReminder extends AppCompatActivity {
     private SharedPreferences.Editor mSharedEditor;
     private Gson gson;
     private Reminder reminder;
+    private TextView mRingtone;
 
     // id
     private String id;
@@ -106,6 +108,7 @@ public class createReminder extends AppCompatActivity {
         mHashtag = (EditText) findViewById(R.id.hashTag);
         mapSelector = (ImageView) findViewById(R.id.mapSelector);
         done = (Button) findViewById(R.id.saveData);
+        mRingtone = (TextView) findViewById(R.id.selectRingtone);
 
         //location
         loc = new Loc(this);
@@ -201,6 +204,12 @@ public class createReminder extends AppCompatActivity {
             public void onClick(View view) {
                 dispatchTakePictureIntent(); //take pictures
             }
+        });
+
+        // on click listener for selecting ringtone
+        mRingtone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) { selectRingtoneIntent(); }
         });
 
         // set date pick listener.
@@ -374,10 +383,28 @@ public class createReminder extends AppCompatActivity {
         }
     }
 
-    // Helper method that shows a preview of the image in the "Description" box
+    //This method selects the ringtone
+    String ringtonePath;
+    /*
+    ringtonePath stores the path for user's selected ringtone.
+     */
+    private void selectRingtoneIntent(){
+        Uri currentTone= RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_ALARM);
+        Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_RINGTONE);
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select Ringtone for reminder");
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, currentTone);
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
+        startActivityForResult(intent, 999);
+    }
+
+
+    // Helper method to specify what to do after activityresult
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        // shows a preview of the image in the "Description" box
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bitmap imageBitmap = null;
             try {
@@ -393,6 +420,14 @@ public class createReminder extends AppCompatActivity {
             toast = Toast.makeText(getApplicationContext(), "Image saved successfully!", Toast.LENGTH_SHORT);
             toast.show();
         }
+
+        // show a preview of the ringtone in the textview
+        if(requestCode == 999 && resultCode == RESULT_OK){
+            Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+            mRingtone.setText("From :" + uri.getPath());
+            ringtonePath = uri.toString();
+        }
+
     }
 
     /**
