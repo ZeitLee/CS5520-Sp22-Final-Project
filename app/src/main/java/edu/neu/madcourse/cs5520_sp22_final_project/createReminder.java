@@ -70,6 +70,7 @@ public class createReminder extends AppCompatActivity {
     private TimePickerDialog.OnTimeSetListener myTimeSetListener;
     private ImageView addPhoto;
     private ImageView mapSelector;
+    private ImageView mic;
     private Button done;
     private SharedPreferences mSharedPreference;
     private SharedPreferences.Editor mSharedEditor;
@@ -80,6 +81,7 @@ public class createReminder extends AppCompatActivity {
     // date and time.
     private String dateString;
     private String timeString;
+    // recording.
 
     //location
     private Loc loc;
@@ -100,6 +102,7 @@ public class createReminder extends AppCompatActivity {
         mDescription = (EditText) findViewById(R.id.description);
         mapSelector = (ImageView) findViewById(R.id.mapSelector);
         done = (Button) findViewById(R.id.saveData);
+        mic = (ImageView) findViewById(R.id.mic_icon);
 
         //location
         loc = new Loc(this);
