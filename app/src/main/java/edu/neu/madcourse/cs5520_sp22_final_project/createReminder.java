@@ -73,10 +73,14 @@ public class createReminder extends AppCompatActivity {
     private ImageView mapSelector;
     private ImageView mic;
     private ImageView photo;
+    private ImageView person;
     private Button done;
     private SharedPreferences mSharedPreference;
     private SharedPreferences.Editor mSharedEditor;
     private Gson gson;
+
+    private AlertDialog dialog;
+    private AlertDialog.Builder dialogBuilder;
 
     // id.
     private String id;
@@ -110,6 +114,7 @@ public class createReminder extends AppCompatActivity {
         done = (Button) findViewById(R.id.saveData);
         mic = (ImageView) findViewById(R.id.mic_icon);
         photo = (ImageView) findViewById(R.id.photo);
+        person = (ImageView) findViewById(R.id.person);
 
         //location
         loc = new Loc(this);
@@ -233,12 +238,22 @@ public class createReminder extends AppCompatActivity {
             }
         });
 
+
+
         // done button action.
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 settingDone();
                 backtoMain(view);
+            }
+        });
+
+        // person button action.
+        person.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showContactDialog();
             }
         });
 
@@ -286,6 +301,15 @@ public class createReminder extends AppCompatActivity {
             locationView.setText(address);
             showImage(currentPhotoPath);
         }
+    }
+
+    private void showContactDialog() {
+        dialogBuilder = new AlertDialog.Builder(this);
+        final View contactView = getLayoutInflater().inflate(R.layout.person_information, null);
+
+        dialogBuilder.setView(contactView);
+        dialog = dialogBuilder.create();
+        dialog.show();
     }
 
     private void showRecordingActivity() {
