@@ -14,47 +14,37 @@ public class Reminder {
     public Voice voice;
     public String date;
     public String time;
-    public String location;
+    public String hashtag;
+    public double[] location;
     public boolean completed;
+    public int Alarm_No;
 
     public Reminder() {
         id = UUID.randomUUID().toString();
         title = "Task Name";
         description = "";
+        hashtag = "";
         image = null;
         voice = null;
         date = "";
         time = "";
-        location = null;
+        location = new double[2];
         completed = false;
     }
 
-    public Reminder(String id, String title, String description, String image, Voice voice, String date,
-                    String time, String location, boolean complete) {
+    public Reminder(String id, String title, String description, String hashtag, String image,
+                    Voice voice, String date, int Alarm_No,
+                    String time, double[] location, boolean complete) {
         this.id = id;
         this.title = title;
         this.description = description;
+        this.hashtag = hashtag;
         this.image = image;
         this.voice = voice;
         this.date = date;
         this.time = time;
         this.location = location;
         this.completed = complete;
-    }
-
-    public String getTitle() {
-        return this.title;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
-    public String getDate() {
-        return this.date;
-    }
-
-    public String getTime() {
-        return this.time;
+        this.Alarm_No = Alarm_No;
     }
 }

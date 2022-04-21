@@ -25,6 +25,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.RingtoneManager;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
@@ -65,6 +66,7 @@ public class createReminder extends AppCompatActivity {
 
     private EditText nameInput;
     private EditText mDescription;
+    private EditText mHashtag;
     private TextView myTextDisplayDate;
     private TextView myTextDisplayTime;
     private DatePickerDialog.OnDateSetListener myDateSetListener;
@@ -78,6 +80,8 @@ public class createReminder extends AppCompatActivity {
     private SharedPreferences mSharedPreference;
     private SharedPreferences.Editor mSharedEditor;
     private Gson gson;
+    private Reminder reminder;
+    private TextView mRingtone;
 
     private AlertDialog dialog;
     private AlertDialog.Builder dialogBuilder;
@@ -92,8 +96,13 @@ public class createReminder extends AppCompatActivity {
     //location
     private Loc loc;
     private String address;
+    private double[] geoLoc;
+    private double[] currLoc;
     TextView locationView;
     ActivityResultLauncher<Intent> intentActivityResultLauncher;
+
+    //alarm id
+    private int Alarm_No;
 
     // Some local variables needed for saving pictures to storage
     static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -105,13 +114,16 @@ public class createReminder extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_reminder);
 
+        reminder = new Reminder();
         nameInput = (EditText) findViewById(R.id.editTextTaskName);
         myTextDisplayDate = (TextView) findViewById(R.id.dateSelector);
         myTextDisplayTime = (TextView) findViewById(R.id.timeSelector);
         addPhoto = (ImageView) findViewById(R.id.photoImageView);
         mDescription = (EditText) findViewById(R.id.description);
+        mHashtag = (EditText) findViewById(R.id.hashTag);
         mapSelector = (ImageView) findViewById(R.id.mapSelector);
         done = (Button) findViewById(R.id.saveData);
+        mRingtone = (TextView) findViewById(R.id.selectRingtone);
         mic = (ImageView) findViewById(R.id.mic_icon);
         photo = (ImageView) findViewById(R.id.photo);
         person = (ImageView) findViewById(R.id.person);
@@ -121,8 +133,9 @@ public class createReminder extends AppCompatActivity {
         locationView = findViewById(R.id.location);
         //TODO: I just comment this line because it will always show the default location at the
         // create menu.(Zesheng)
-        //loc.setViewLocation(locationView);
 
+        geoLoc = new double[2];
+        currLoc = getIntent().getDoubleArrayExtra("loc");
         address = "";
         intentActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -134,16 +147,24 @@ public class createReminder extends AppCompatActivity {
                         System.out.println(result.getResultCode());
                         if (result.getResultCode() == 1) {
                             assert result.getData() != null;
-                            address = result.getData().getStringExtra("address");
-                            locationView.setText(address);
+                            geoLoc = result.getData().getDoubleArrayExtra("address");
+                            locationView.setText(Loc.geoToAddress(geoLoc[0], geoLoc[1], createReminder.this));
                         }
                     }
                 });
-
         // Initialization.
         initialSetting();
         initialValue();
 
+        System.out.println("geoloc");
+        System.out.println(Arrays.toString(geoLoc));
+        if (geoLoc[0] == 0 && geoLoc[1] == 0) {
+            if (currLoc[0] == 0 && currLoc[1] == 0) {
+                loc.setViewLocation(locationView);
+            } else {
+                locationView.setText(Loc.geoToAddress(currLoc[0], currLoc[1], this));
+            }
+        }
     }
 
     // Go back to the previous screen
@@ -165,9 +186,9 @@ public class createReminder extends AppCompatActivity {
         System.out.println(Arrays.toString(timeSplit));
         String des = mDescription.getText().toString();
         System.out.println(des);
-        System.out.println(address);
-        new Alarm(this).fireAlarm(des, dateSplit[2],
+        Alarm_No = new Alarm(MainActivity.getMyInstanceActivity()).fireAlarm(des, dateSplit[2],
                 dateSplit[0], dateSplit[1], timeSplit[0], timeSplit[1]);
+        System.out.println("Alarm_No in create " + Alarm_No);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
@@ -203,12 +224,19 @@ public class createReminder extends AppCompatActivity {
             }
         });
 
+        // on click listener for selecting ringtone
+        mRingtone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) { selectRingtoneIntent(); }
+        });
+
         // set date pick listener.
         myDateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 int showMonth = month + 1; // since the month is 0-based data.
-                dateString = String.format("%d/%d/%d", showMonth, day, year);
+                String dateString = String.format("%d/%d/%d", showMonth, day, year);
+                reminder.date = dateString;
                 myTextDisplayDate.setText(dateString);
             }
         };
@@ -225,7 +253,8 @@ public class createReminder extends AppCompatActivity {
         myTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-                timeString = String.format("%d:%d", hour, minute);
+                String timeString = String.format("%d:%d", hour, minute);
+                reminder.time = timeString;
                 myTextDisplayTime.setText(timeString);
             }
         };
@@ -244,6 +273,7 @@ public class createReminder extends AppCompatActivity {
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                backtoMain(view);
                 settingDone();
                 backtoMain(view);
             }
@@ -268,7 +298,6 @@ public class createReminder extends AppCompatActivity {
         // initial local storage.
         mSharedPreference = getSharedPreferences("reminder_info", MODE_PRIVATE);
         mSharedEditor = mSharedPreference.edit();
-        // initial gson
         gson = new Gson();
     }
 
@@ -277,29 +306,24 @@ public class createReminder extends AppCompatActivity {
      */
     private void initialValue() {
         Bundle extras = getIntent().getExtras();
-        id = null;
-        if (extras.containsKey("id")) {
-            id = extras.getString("id");
-        } else {
-            id = UUID.randomUUID().toString();
-        }
-
-        String json = loadData(id);
-        if (json != null) {
-            Reminder reminder = gson.fromJson(json, Reminder.class);
-            // set variables.
+        if (!extras.containsKey("id")) {
             id = reminder.id;
-            dateString = reminder.getDate();
-            timeString = reminder.getTime();
-            address = reminder.location;
-            currentPhotoPath = reminder.image;
-            // set text view.
-            nameInput.setText(reminder.getTitle());
-            mDescription.setText(reminder.getDescription());
-            myTextDisplayDate.setText(dateString);
-            myTextDisplayTime.setText(timeString);
-            locationView.setText(address);
-            showImage(currentPhotoPath);
+        } else {
+            id = extras.getString("id");
+            String json = mSharedPreference.getString(id, null);
+            if (json != null) {
+                reminder = gson.fromJson(json, Reminder.class);
+                // set text view.
+                nameInput.setText(reminder.title);
+                mDescription.setText(reminder.description);
+                mHashtag.setText(reminder.hashtag);
+                myTextDisplayDate.setText(reminder.date);
+                myTextDisplayTime.setText(reminder.time);
+                address = Loc.geoToAddress(reminder.location[0], reminder.location[1], this);
+                geoLoc = new double[]{reminder.location[0], reminder.location[1]};
+                locationView.setText(address);
+                showImage(currentPhotoPath);
+            }
         }
     }
 
@@ -320,9 +344,11 @@ public class createReminder extends AppCompatActivity {
     // This is a helper method to show map selector screen.
     private void showMapSelector() {
         Intent intent = new Intent(this, MapActivity.class);
-        address = loc.getAddress();
-        intent.putExtra("loc", (Serializable) loc.getGeoLoc());
-        intent.putExtra("address", address);
+        if (geoLoc[0] == 0 && geoLoc[1] == 0) {
+            intent.putExtra("loc", loc.getGeoLoc());
+        } else {
+            intent.putExtra("loc", geoLoc);
+        }
         intentActivityResultLauncher.launch(intent);
     }
 
@@ -407,10 +433,28 @@ public class createReminder extends AppCompatActivity {
         }
     }
 
-    // Helper method that shows a preview of the image in the "Description" box
+    //This method selects the ringtone
+    String ringtonePath;
+    /*
+    ringtonePath stores the path for user's selected ringtone.
+     */
+    private void selectRingtoneIntent(){
+        Uri currentTone= RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_ALARM);
+        Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_RINGTONE);
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select Ringtone for reminder");
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, currentTone);
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
+        startActivityForResult(intent, 999);
+    }
+
+
+    // Helper method to specify what to do after activityresult
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        // shows a preview of the image in the "Description" box
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bitmap imageBitmap = null;
             try {
@@ -426,6 +470,13 @@ public class createReminder extends AppCompatActivity {
             toast = Toast.makeText(getApplicationContext(), "Image saved successfully!", Toast.LENGTH_SHORT);
             toast.show();
         }
+
+        // show a preview of the ringtone in the textview
+        if (requestCode == 999 && resultCode == RESULT_OK) {
+            Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+            mRingtone.setText("From :" + uri.getPath());
+            ringtonePath = uri.toString();
+        }
     }
 
     // show image by path.
@@ -437,58 +488,30 @@ public class createReminder extends AppCompatActivity {
 
     }
 
-    // Helper method to handle done button.
+
+    /**
+     * Helper method to handle done button.
+     * convert all data to json and save date to shared preference.
+     * user task id as key.
+     */
     private void settingDone() {
-        // convert all data to json.
         String value = buildJson();
-        // save data to shared preference.
-        // use task id as key.
-        saveData(id, value);
-    }
-
-    // Helper method that save data in to local storage.
-    private void saveData(String key, String json) {
-        mSharedEditor.putString(key, json);
+        mSharedEditor.putString(id, value);
         mSharedEditor.apply();
-    }
-
-    // Helper method that load data.
-    private String loadData(String key) {
-        if (mSharedPreference.contains(key)) {
-            String data = mSharedPreference.getString(key, null);
-            return data;
-        } else {
-            return null;
-        }
     }
 
     // Helper method build json string based on current data.
     private String buildJson() {
-        // title
         String title = nameInput.getText().toString();
-        // give a default name if task name is empty.
-        if ("".equals(title)|| title == null) {
-            title = "Default Task";
-        }
-        // description
-        String description = mDescription.getText().toString();
-
+        reminder.title = !"".equals(title) ? title : "Task Name";
+        reminder.description = mDescription.getText().toString();
+        reminder.hashtag = mHashtag.getText().toString();
+        reminder.location = geoLoc;
+        reminder.Alarm_No = Alarm_No;
+        reminder.image = currentPhotoPath;
         //TODO: need to update image path and voice file path.
-        Reminder res = new Reminder(id, title, description, currentPhotoPath, null, dateString,
-                timeString, address, false);
-        String json = gson.toJson(res);
-        return json;
+        return gson.toJson(reminder);
     }
-
-
-
-
-
-
-
-
-
-
 
 }
 

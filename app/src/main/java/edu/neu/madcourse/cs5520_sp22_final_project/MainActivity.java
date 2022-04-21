@@ -5,11 +5,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import edu.neu.madcourse.cs5520_sp22_final_project.Alarm.Receiver;
+import edu.neu.madcourse.cs5520_sp22_final_project.Location.Loc;
 import edu.neu.madcourse.cs5520_sp22_final_project.models.Reminder;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Looper;
 import android.view.View;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +25,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -41,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences.Editor edit;
     private Gson gson;
 
+    //location
+    private Loc loc;
+
     public static WeakReference<MainActivity> weakActivity;
 
     private final ArrayList<Reminder> itemList = new ArrayList<>();
@@ -49,21 +63,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        loc = new Loc(this);
         loadComponent();
         loadListener();
         loadReminders();
 
-
-        //TODO: delete this part after implementing click items in the list.
-        //***********************  for testing load.
-        EditText sk = findViewById(R.id.storageKey);
-        sk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mockButton(sk.getText().toString());
-            }
-        });
-        // *********** ****************
 
         weakActivity = new WeakReference<>(MainActivity.this);
 
@@ -81,6 +85,15 @@ public class MainActivity extends AppCompatActivity {
                     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                         int position = viewHolder.getLayoutPosition();
                         String id = itemList.get(position).id;
+
+                        //Cancel alarm
+                        int Alarm_No = itemList.get(position).Alarm_No;
+                        System.out.println("Alarm_no in Swipe" + Alarm_No);
+                        Intent intent = new Intent(MainActivity.this, Receiver.class);
+                        PendingIntent pItent = PendingIntent.getBroadcast(MainActivity.this, Alarm_No, intent, 0);
+                        AlarmManager alarm = (AlarmManager) MainActivity.this.getSystemService(Context.ALARM_SERVICE);
+                        alarm.cancel(pItent);
+
                         edit.remove(id).commit();
                         idList.remove(id);
                         itemList.remove(position);
@@ -88,6 +101,18 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
         itemTouchHelper.attachToRecyclerView(recyclerView);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 1:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    loc = new Loc(this);
+                }
+        }
     }
 
     private void loadComponent() {
@@ -168,26 +193,13 @@ public class MainActivity extends AppCompatActivity {
     public void jumpToReminder(String id) {
         Intent i = new Intent(this, createReminder.class);
         i.putExtra("id", id);
+        i.putExtra("loc", loc.getGeoLoc());
         startActivity(i);
     }
 
     // get instance of main.
     public static MainActivity getMyInstanceActivity() {
         return weakActivity.get();
-    }
-
-    // mock button for testing load data.
-    private void mockButton(String key) {
-        if (!mSharedPreferences.contains(key)) {
-            Intent i = new Intent(this, createReminder.class);
-            startActivity(i);
-            return;
-        }
-        String data = mSharedPreferences.getString(key, null);
-        Intent i = new Intent(this, createReminder.class);
-        i.putExtra(key, data);
-        i.putExtra("keyName", key);
-        startActivity(i);
     }
 
 }

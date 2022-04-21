@@ -66,7 +66,7 @@ public class Loc {
         return address;
     }
 
-    public double[] getGeoLoc() { return new double[]{lo, la}; }
+    public double[] getGeoLoc() { return new double[]{la, lo}; }
 
     public void setViewLocation(TextView view) {
         getCurr(view);
