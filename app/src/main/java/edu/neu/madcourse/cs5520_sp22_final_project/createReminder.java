@@ -322,7 +322,7 @@ public class createReminder extends AppCompatActivity {
                 address = Loc.geoToAddress(reminder.location[0], reminder.location[1], this);
                 geoLoc = new double[]{reminder.location[0], reminder.location[1]};
                 locationView.setText(address);
-                showImage(currentPhotoPath);
+                showImage(reminder.image);
             }
         }
     }
