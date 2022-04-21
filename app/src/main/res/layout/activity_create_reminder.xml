@@ -111,9 +111,9 @@
 
     <EditText
         android:id="@+id/description"
-        android:layout_width="349dp"
-        android:layout_height="154dp"
-        android:layout_marginTop="20dp"
+        android:layout_width="345dp"
+        android:layout_height="130dp"
+        android:layout_marginTop="13dp"
         android:background="@drawable/et_layout"
         android:ems="10"
         android:gravity="top"
@@ -126,14 +126,14 @@
         android:text=""
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dataImageView" />
+        app:layout_constraintTop_toBottomOf="@+id/repeat_options" />
 
     <ImageView
         android:id="@+id/mapSelector"
         android:layout_width="67dp"
         android:layout_height="67dp"
         android:layout_marginStart="28dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/description"
         app:srcCompat="@drawable/location_foreground" />
@@ -203,6 +203,36 @@
         app:layout_constraintTop_toBottomOf="@+id/location"
         app:layout_constraintVertical_bias="0.0"
         tools:srcCompat="@tools:sample/avatars" />
+
+    <Spinner
+        android:id="@+id/repeat_options"
+        android:layout_width="167dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="11dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="13dp"
+        android:entries="@array/repeat_option"
+        app:layout_constraintBottom_toTopOf="@+id/description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/repeatView"
+        app:layout_constraintTop_toBottomOf="@+id/dataImageView" />
+
+    <TextView
+        android:id="@+id/repeatView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="25dp"
+        android:text="Repeat"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/description"
+        app:layout_constraintEnd_toStartOf="@+id/repeat_options"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dataImageView"
+        app:layout_constraintVertical_bias="1.0" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

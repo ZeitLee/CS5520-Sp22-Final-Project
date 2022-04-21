@@ -3,17 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/abing/AndroidStudioProjects/CS5520-Sp22-Final-Project/app/src/main/res/layout/activity_create_reminder.xml" value="0.3625" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2365" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.175" />
-        <entry key="app/src/main/res/layout/activity_create_reminder.xml" value="0.267108154296875" />
+        <entry key="app/src/main/res/layout/activity_create_reminder.xml" value="0.2836835557135983" />
         <entry key="app/src/main/res/layout/activity_location.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_map.xml" value="0.17147922998986828" />
-        <entry key="app/src/main/res/layout/activity_recording.xml" value="0.25317028985507245" />
         <entry key="app/src/main/res/layout/fragment_map.xml" value="0.1" />
         <entry key="app/src/main/res/layout/map_fragment.xml" value="0.17708333333333334" />
-        <entry key="app/src/main/res/layout/person_information.xml" value="0.31567028985507245" />
         <entry key="app/src/main/res/layout/reminder_list_item.xml" value="0.2988259799238564" />
       </map>
     </option>

@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public class Alarm {
     private final Context context;
-    private final int ALARM_NO = 10000000 + new Random().nextInt(900000000);
+    private int ALARM_NO = 10000000 + new Random().nextInt(900000000);
 
     public Alarm(Context context) {
         this.context = context;
@@ -21,7 +21,8 @@ public class Alarm {
     /**
      * trigger alarm based on date and msg
      */
-    public int fireAlarm(String msg, int year, int month, int day, int hour, int min) {
+    public int fireAlarm(String msg, String repeat, int existedAlarmNo, int year, int month, int day, int hour, int min) {
+        ALARM_NO = existedAlarmNo == 0 ? ALARM_NO : existedAlarmNo;
         Calendar calendar = Calendar.getInstance();
         //month is 0-indexed
         System.out.println(msg + "" + year + ", " + month + ", " + day + ", " + hour + ", " + min);
@@ -35,6 +36,20 @@ public class Alarm {
         Intent intent = new Intent(context, Receiver.class);
         intent.putExtra("msg", msg);
         System.out.println("Alarm_No: " + ALARM_NO);
+        switch (repeat) {
+            case "None":
+                System.out.println("none");
+                break;
+            case "Daily":
+                System.out.println("Daily");
+                break;
+            case "Weekly":
+                System.out.println("Weekly");
+                break;
+            case "Monthly":
+                System.out.println("Monthly");
+                break;
+        }
         PendingIntent pItent = PendingIntent.getBroadcast(context, ALARM_NO, intent, 0);
         AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
