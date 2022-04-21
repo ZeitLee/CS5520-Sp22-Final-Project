@@ -25,6 +25,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -71,12 +72,13 @@ public class createReminder extends AppCompatActivity {
     private ImageView addPhoto;
     private ImageView mapSelector;
     private ImageView mic;
+    private ImageView photo;
     private Button done;
     private SharedPreferences mSharedPreference;
     private SharedPreferences.Editor mSharedEditor;
     private Gson gson;
 
-    // id
+    // id.
     private String id;
     // date and time.
     private String dateString;
@@ -88,6 +90,10 @@ public class createReminder extends AppCompatActivity {
     private String address;
     TextView locationView;
     ActivityResultLauncher<Intent> intentActivityResultLauncher;
+
+    // Some local variables needed for saving pictures to storage
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+    String currentPhotoPath; //can be retrieved later
 
 
     @Override
@@ -103,6 +109,7 @@ public class createReminder extends AppCompatActivity {
         mapSelector = (ImageView) findViewById(R.id.mapSelector);
         done = (Button) findViewById(R.id.saveData);
         mic = (ImageView) findViewById(R.id.mic_icon);
+        photo = (ImageView) findViewById(R.id.photo);
 
         //location
         loc = new Loc(this);
@@ -235,6 +242,14 @@ public class createReminder extends AppCompatActivity {
             }
         });
 
+        // mic button action.
+        mic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showRecordingActivity();
+            }
+        });
+
         // initial local storage.
         mSharedPreference = getSharedPreferences("reminder_info", MODE_PRIVATE);
         mSharedEditor = mSharedPreference.edit();
@@ -262,13 +277,20 @@ public class createReminder extends AppCompatActivity {
             dateString = reminder.getDate();
             timeString = reminder.getTime();
             address = reminder.location;
+            currentPhotoPath = reminder.image;
             // set text view.
             nameInput.setText(reminder.getTitle());
             mDescription.setText(reminder.getDescription());
             myTextDisplayDate.setText(dateString);
             myTextDisplayTime.setText(timeString);
             locationView.setText(address);
+            showImage(currentPhotoPath);
         }
+    }
+
+    private void showRecordingActivity() {
+        Intent intent = new Intent(this, Recording.class);
+        startActivity(intent);
     }
 
     // This is a helper method to show map selector screen.
@@ -309,9 +331,7 @@ public class createReminder extends AppCompatActivity {
     }
 
 
-    // Some local variables needed for saving pictures to storage
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-    String currentPhotoPath; //can be retrieved later
+
     /*
     Default path for the images:
     Android/data/edu.neu.madcourse.cs5520_sp22_final_project/files/Pictures
@@ -384,6 +404,15 @@ public class createReminder extends AppCompatActivity {
         }
     }
 
+    // show image by path.
+    private void showImage(String path) {
+        if (path != null) {
+            Bitmap bitmap = BitmapFactory.decodeFile(path);
+            photo.setImageBitmap(bitmap);
+        }
+
+    }
+
     // Helper method to handle done button.
     private void settingDone() {
         // convert all data to json.
@@ -421,7 +450,7 @@ public class createReminder extends AppCompatActivity {
         String description = mDescription.getText().toString();
 
         //TODO: need to update image path and voice file path.
-        Reminder res = new Reminder(id, title, description, null, null, dateString,
+        Reminder res = new Reminder(id, title, description, currentPhotoPath, null, dateString,
                 timeString, address, false);
         String json = gson.toJson(res);
         return json;

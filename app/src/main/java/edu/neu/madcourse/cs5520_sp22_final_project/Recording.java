@@ -7,16 +7,22 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.PackageManagerCompat;
 
 import android.Manifest;
+import android.content.ContextWrapper;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Executable;
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -24,15 +30,19 @@ public class Recording extends AppCompatActivity {
 
     private static final int REQUEST_AUDIO_PERMISSION_CODE = 101;
     private MediaRecorder mediaRecorder;
-    private MediaPlayer meidaPlayer;
+    private MediaPlayer mediaPlayer;
     private Button startRecord;
-    private Button stopRecord;
-    private TextView timer
+    private Button play;
+    private TextView timer;
     private boolean isRecording;
     private boolean isPlaying;
 
-    private int second;
+    private int seconds;
     private String path;
+
+    int dummySeconds;
+    Handler handler;
+    int playableSeconds;
 
     ExecutorService executorService;
 
@@ -42,6 +52,8 @@ public class Recording extends AppCompatActivity {
         setContentView(R.layout.activity_recording);
 
         initialElements();
+
+
     }
 
     /**
@@ -49,13 +61,16 @@ public class Recording extends AppCompatActivity {
      */
     private void initialElements() {
         startRecord = (Button) findViewById(R.id.start);
-        stopRecord = (Button) findViewById(R.id.stop);
+        play = (Button) findViewById(R.id.play);
         timer = (TextView) findViewById(R.id.timer);
         isRecording = false;
         isPlaying = false;
         executorService = Executors.newSingleThreadExecutor();
 
-        meidaPlayer = new MediaPlayer();
+        mediaPlayer = new MediaPlayer();
+
+        setStartButton();
+        setPlayerButton();
     }
 
     // set start button click listener.
@@ -64,8 +79,7 @@ public class Recording extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (checkRecordingPermission()) {
-                    // check recording state.
-
+                    recordAction();
                 } else {
                     // request permission.
                     requestRecordingPermissions();
@@ -74,6 +88,76 @@ public class Recording extends AppCompatActivity {
         });
     }
 
+    // set player start.
+    private void setPlayerButton() {
+        play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!isPlaying) {
+                    if (path != null) {
+                        try {
+                            mediaPlayer.setDataSource(getRecordingFilePath());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        Toast.makeText(getApplicationContext(), "No Recording Present.",
+                                Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    try {
+                        mediaPlayer.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    mediaPlayer.start();
+                    isPlaying = true;
+                    runTimer();
+                } else {
+                    mediaPlayer.stop();
+                    mediaPlayer.release();
+                    mediaPlayer = null;
+                    mediaPlayer = new MediaPlayer();
+                    isPlaying = false;
+                    seconds = 0;
+                    handler.removeCallbacksAndMessages(null);
+                }
+            }
+        });
+    }
+
+    private void runTimer() {
+        handler = new Handler();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                int minutes = (seconds % 3600) / 60;
+                int sec = seconds % 60;
+                String time = String.format(Locale.getDefault(),"%02d:%02d", minutes, sec);
+                timer.setText(time);
+
+                if (isRecording || (isPlaying && playableSeconds != -1)) {
+                    seconds++;
+                    playableSeconds--;
+
+                    if (isPlaying && playableSeconds == -1) {
+                        mediaPlayer.stop();
+                        mediaPlayer.release();
+                        mediaPlayer = null;
+                        mediaPlayer = new MediaPlayer();
+                        playableSeconds = dummySeconds;
+                        seconds = 0;
+                        handler.removeCallbacksAndMessages(null);
+                        return;
+                    }
+                }
+
+                handler.postDelayed(this, 1000);
+            }
+        });
+    }
+
+
     private boolean checkRecordingPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
                 == PackageManager.PERMISSION_DENIED) {
@@ -81,6 +165,55 @@ public class Recording extends AppCompatActivity {
             return false;
         } else {
             return true;
+        }
+    }
+
+    private void recordAction() {
+        // check recording state.
+        if (!isRecording) {
+            isRecording = true;
+            executorService.execute(new Runnable() {
+                @Override
+                public void run() {
+                    mediaRecorder = new MediaRecorder();
+                    mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+                    mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+                    mediaRecorder.setOutputFile(getRecordingFilePath());
+                    path = getRecordingFilePath();
+                    mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+
+                    try {
+                        mediaRecorder.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    mediaRecorder.start();
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            seconds = 0;
+                            dummySeconds = 0;
+                            runTimer();
+                        }
+                    });
+                }
+            });
+        } else {
+            mediaRecorder.stop();
+            mediaRecorder.release();
+            mediaRecorder = null;
+            playableSeconds = seconds;
+            dummySeconds = seconds;
+            seconds = 0;
+            isRecording = false;
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    handler.removeCallbacksAndMessages(null);
+                }
+            });
         }
     }
 
@@ -105,5 +238,12 @@ public class Recording extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    private String getRecordingFilePath() {
+        ContextWrapper contextWrapper = new ContextWrapper(getApplicationContext());
+        File music = contextWrapper.getExternalFilesDir(Environment.DIRECTORY_MUSIC);
+        File file = new File(music, "recording" + ".mp3");
+        return file.getPath();
     }
 }

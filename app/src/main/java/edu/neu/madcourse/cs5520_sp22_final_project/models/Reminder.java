@@ -10,7 +10,7 @@ public class Reminder {
     public String id;
     public String title;
     public String description;
-    public Image image;
+    public String image;
     public Voice voice;
     public String date;
     public String time;
@@ -29,7 +29,7 @@ public class Reminder {
         completed = false;
     }
 
-    public Reminder(String id, String title, String description, Image image, Voice voice, String date,
+    public Reminder(String id, String title, String description, String image, Voice voice, String date,
                     String time, String location, boolean complete) {
         this.id = id;
         this.title = title;
