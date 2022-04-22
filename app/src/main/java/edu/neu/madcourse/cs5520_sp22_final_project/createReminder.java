@@ -25,6 +25,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.media.Image;
 import android.net.Uri;
@@ -201,9 +202,11 @@ public class createReminder extends AppCompatActivity {
         String repeatOption = repeat.getSelectedItem().toString();
 
         System.out.println("existed Alarm: " + existedAlarmNo);
+        System.out.println("Ring Path: " + ringtonePath);
+
         Alarm_No = new Alarm(MainActivity
                 .getMyInstanceActivity())
-                .fireAlarm(des, repeatOption, existedAlarmNo,
+                .fireAlarm(des, repeatOption, existedAlarmNo, ringtonePath,
                         dateSplit[2], dateSplit[0], dateSplit[1],
                         timeSplit[0], timeSplit[1]);
 
@@ -344,6 +347,10 @@ public class createReminder extends AppCompatActivity {
                 existedAlarmNo = reminder.Alarm_No;
                 System.out.println("initialValue Alarm no " + existedAlarmNo);
                 repeat.setSelection(reminder.repeat);
+                ringtonePath = reminder.soundPath;
+                if (ringtonePath != null) {
+                    mRingtone.setText(ringtonePath);
+                }
                 showImage(reminder.image);
             }
         }
@@ -496,8 +503,11 @@ public class createReminder extends AppCompatActivity {
         // show a preview of the ringtone in the textview
         if (requestCode == 999 && resultCode == RESULT_OK) {
             Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-            mRingtone.setText("From :" + uri.getPath());
+            mRingtone.setText(uri.getPath());
             ringtonePath = uri.toString();
+
+//            MediaPlayer.create(this, Uri.parse("content://media/external_primary/audio/media/63?title=Your%20New%20Adventure&canonical=1")).start();
+
         }
     }
 
@@ -532,6 +542,7 @@ public class createReminder extends AppCompatActivity {
         reminder.Alarm_No = Alarm_No;
         reminder.image = currentPhotoPath;
         reminder.repeat = repeat.getSelectedItemPosition();
+        reminder.soundPath = ringtonePath;
         //TODO: need to update image path and voice file path.
         return gson.toJson(reminder);
     }

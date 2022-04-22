@@ -19,6 +19,7 @@ public class Reminder {
     public boolean completed;
     public int Alarm_No;
     public int repeat;
+    public String soundPath;
 
     public Reminder() {
         id = UUID.randomUUID().toString();
@@ -32,6 +33,7 @@ public class Reminder {
         location = new double[2];
         completed = false;
         repeat = 0;
+        soundPath = null;
     }
 
     public Reminder(String id, String title, String description, String hashtag, String image,

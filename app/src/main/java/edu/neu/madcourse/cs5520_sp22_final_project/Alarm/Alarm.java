@@ -27,7 +27,8 @@ public class Alarm {
     /**
      * trigger alarm based on date and msg
      */
-    public int fireAlarm(String msg, String repeat, int existedAlarmNo, int year, int month, int day, int hour, int min) {
+    public int fireAlarm(String msg, String repeat, int existedAlarmNo, String ringPath,
+                         int year, int month, int day, int hour, int min) {
         ALARM_NO = existedAlarmNo == 0 ? ALARM_NO : existedAlarmNo;
         Calendar calendar = Calendar.getInstance();
 
@@ -80,6 +81,7 @@ public class Alarm {
         intent.putExtra("day", day);
         intent.putExtra("hour", hour);
         intent.putExtra("min", min);
+        intent.putExtra("ringPath", ringPath);
 
         System.out.println("Alarm_No: " + ALARM_NO);
         PendingIntent pItent;

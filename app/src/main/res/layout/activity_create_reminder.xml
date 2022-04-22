@@ -1,238 +1,241 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".createReminder">
+    android:fillViewport="true">
 
-    <Button
-        android:id="@+id/saveData"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:layout_marginEnd="28dp"
-        android:text="DONE"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        tools:context=".createReminder">
 
-    <EditText
-        android:id="@+id/editTextTaskName"
-        android:layout_width="355dp"
-        android:layout_height="66dp"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:hint="Task name"
-        android:inputType="textPersonName"
-        android:text=""
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/saveData" />
+        <Button
+            android:id="@+id/saveData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:layout_marginEnd="28dp"
+            android:text="DONE"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/location"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="48dp"
-        android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@+id/mapSelector"
-        app:layout_constraintTop_toBottomOf="@+id/description" />
+        <EditText
+            android:id="@+id/editTextTaskName"
+            android:layout_width="355dp"
+            android:layout_height="66dp"
+            android:layout_marginTop="16dp"
+            android:ems="10"
+            android:hint="Task name"
+            android:inputType="textPersonName"
+            android:text=""
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/saveData" />
 
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="67dp"
-        android:layout_height="67dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="1dp"
-        android:layout_marginEnd="316dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
-        app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@drawable/music_foreground" />
+        <TextView
+            android:id="@+id/location"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="24dp"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/mapSelector"
+            app:layout_constraintTop_toBottomOf="@+id/description" />
 
-    <TextView
-        android:id="@+id/timeSelector"
-        android:layout_width="53dp"
-        android:layout_height="21dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="40dp"
-        android:hint="Time"
-        android:text=""
-        app:layout_constraintStart_toEndOf="@+id/timeImageView"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTaskName" />
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="5dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView"
+            app:srcCompat="@drawable/music_foreground" />
 
-    <TextView
-        android:id="@+id/selectRingtone"
-        android:layout_width="177dp"
-        android:layout_height="32dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginBottom="28dp"
-        android:text="Select Ringtone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageView2" />
+        <TextView
+            android:id="@+id/timeSelector"
+            android:layout_width="53dp"
+            android:layout_height="21dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="40dp"
+            android:hint="Time"
+            android:text=""
+            app:layout_constraintStart_toEndOf="@+id/timeImageView"
+            app:layout_constraintTop_toBottomOf="@+id/editTextTaskName" />
 
-    <TextView
-        android:id="@+id/dateSelector"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:layout_marginTop="40dp"
-        android:hint="Date"
-        android:text=""
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.348"
-        app:layout_constraintStart_toEndOf="@+id/dataImageView"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTaskName" />
+        <TextView
+            android:id="@+id/selectRingtone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="20dp"
+            android:text="Select Ringtone"
+            app:layout_constraintStart_toEndOf="@+id/imageView2"
+            app:layout_constraintTop_toBottomOf="@+id/hashTag" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="67dp"
-        android:layout_height="67dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.081"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/person"
-        app:srcCompat="@drawable/hash_foreground" />
+        <TextView
+            android:id="@+id/dateSelector"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginTop="40dp"
+            android:hint="Date"
+            android:text=""
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.348"
+            app:layout_constraintStart_toEndOf="@+id/dataImageView"
+            app:layout_constraintTop_toBottomOf="@+id/editTextTaskName" />
 
-    <ImageView
-        android:id="@+id/dataImageView"
-        android:layout_width="68dp"
-        android:layout_height="66dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="12dp"
-        app:layout_constraintStart_toEndOf="@+id/timeSelector"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTaskName"
-        app:srcCompat="@drawable/calendar_foreground" />
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            app:layout_constraintBottom_toTopOf="@+id/imageView2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/person"
+            app:srcCompat="@drawable/hash_foreground" />
 
-    <EditText
-        android:id="@+id/description"
-        android:layout_width="345dp"
-        android:layout_height="130dp"
-        android:layout_marginTop="13dp"
-        android:background="@drawable/et_layout"
-        android:ems="10"
-        android:gravity="top"
-        android:hint="Description"
-        android:inputType="textMultiLine"
-        android:paddingLeft="10dp"
-        android:paddingTop="5dp"
-        android:paddingRight="10dp"
-        android:paddingBottom="5dp"
-        android:text=""
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/repeat_options" />
+        <ImageView
+            android:id="@+id/dataImageView"
+            android:layout_width="68dp"
+            android:layout_height="66dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintStart_toEndOf="@+id/timeSelector"
+            app:layout_constraintTop_toBottomOf="@+id/editTextTaskName"
+            app:srcCompat="@drawable/calendar_foreground" />
 
-    <ImageView
-        android:id="@+id/mapSelector"
-        android:layout_width="67dp"
-        android:layout_height="67dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/description"
-        app:srcCompat="@drawable/location_foreground" />
+        <EditText
+            android:id="@+id/description"
+            android:layout_width="345dp"
+            android:layout_height="130dp"
+            android:layout_marginTop="13dp"
+            android:background="@drawable/et_layout"
+            android:ems="10"
+            android:gravity="top"
+            android:hint="Description"
+            android:inputType="textMultiLine"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="5dp"
+            android:text=""
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/repeat_options" />
 
-    <ImageView
-        android:id="@+id/photoImageView"
-        android:layout_width="49dp"
-        android:layout_height="45dp"
-        app:layout_constraintBottom_toBottomOf="@+id/description"
-        app:layout_constraintEnd_toEndOf="@+id/description"
-        app:srcCompat="@drawable/add_photo_foreground" />
+        <ImageView
+            android:id="@+id/mapSelector"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            app:layout_constraintBottom_toTopOf="@+id/person"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/description"
+            app:srcCompat="@drawable/location_foreground" />
 
-    <ImageView
-        android:id="@+id/person"
-        android:layout_width="67dp"
-        android:layout_height="67dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="4dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mapSelector"
-        app:srcCompat="@drawable/people_foreground" />
+        <ImageView
+            android:id="@+id/photoImageView"
+            android:layout_width="49dp"
+            android:layout_height="45dp"
+            app:layout_constraintBottom_toBottomOf="@+id/description"
+            app:layout_constraintEnd_toEndOf="@+id/description"
+            app:srcCompat="@drawable/add_photo_foreground" />
 
-    <EditText
-        android:id="@+id/hashTag"
-        android:layout_width="254dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="516dp"
-        android:ems="10"
-        android:hint="Add Hashtag"
-        android:inputType="textPersonName"
-        android:text=""
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.656"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/saveData" />
+        <ImageView
+            android:id="@+id/person"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="5dp"
+            app:layout_constraintBottom_toTopOf="@+id/imageView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mapSelector"
+            app:srcCompat="@drawable/people_foreground" />
 
-    <ImageView
-        android:id="@+id/mic_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="144dp"
-        android:layout_marginTop="40dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/location"
-        app:srcCompat="@drawable/microphone_342" />
+        <EditText
+            android:id="@+id/hashTag"
+            android:layout_width="254dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="Add Hashtag"
+            android:inputType="textPersonName"
+            android:text=""
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.656"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/photo" />
 
-    <ImageView
-        android:id="@+id/timeImageView"
-        android:layout_width="67dp"
-        android:layout_height="67dp"
-        android:layout_marginTop="12dp"
-        app:layout_constraintStart_toStartOf="@+id/editTextTaskName"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTaskName"
-        app:srcCompat="@drawable/time_foreground" />
+        <ImageView
+            android:id="@+id/mic_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="144dp"
+            android:layout_marginTop="30dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/location"
+            app:srcCompat="@drawable/microphone_342" />
 
-    <ImageView
-        android:id="@+id/photo"
-        android:layout_width="109dp"
-        android:layout_height="80dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/mic_icon"
-        app:layout_constraintTop_toBottomOf="@+id/location"
-        app:layout_constraintVertical_bias="0.0"
-        tools:srcCompat="@tools:sample/avatars" />
+        <ImageView
+            android:id="@+id/timeImageView"
+            android:layout_width="67dp"
+            android:layout_height="67dp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintStart_toStartOf="@+id/editTextTaskName"
+            app:layout_constraintTop_toBottomOf="@+id/editTextTaskName"
+            app:srcCompat="@drawable/time_foreground" />
 
-    <Spinner
-        android:id="@+id/repeat_options"
-        android:layout_width="167dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="11dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginBottom="13dp"
-        android:entries="@array/repeat_option"
-        app:layout_constraintBottom_toTopOf="@+id/description"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/repeatView"
-        app:layout_constraintTop_toBottomOf="@+id/dataImageView" />
+        <ImageView
+            android:id="@+id/photo"
+            android:layout_width="109dp"
+            android:layout_height="70dp"
+            android:layout_marginStart="80dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/mic_icon"
+            app:layout_constraintTop_toBottomOf="@+id/location"
+            tools:srcCompat="@tools:sample/avatars" />
 
-    <TextView
-        android:id="@+id/repeatView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="25dp"
-        android:text="Repeat"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/description"
-        app:layout_constraintEnd_toStartOf="@+id/repeat_options"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dataImageView"
-        app:layout_constraintVertical_bias="1.0" />
+        <Spinner
+            android:id="@+id/repeat_options"
+            android:layout_width="167dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="11dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginBottom="13dp"
+            android:entries="@array/repeat_option"
+            app:layout_constraintBottom_toTopOf="@+id/description"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/repeatView"
+            app:layout_constraintTop_toBottomOf="@+id/dataImageView" />
+
+        <TextView
+            android:id="@+id/repeatView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="25dp"
+            android:text="Repeat"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/description"
+            app:layout_constraintEnd_toStartOf="@+id/repeat_options"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dataImageView"
+            app:layout_constraintVertical_bias="1.0" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
