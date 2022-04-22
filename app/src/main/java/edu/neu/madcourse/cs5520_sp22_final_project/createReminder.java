@@ -343,6 +343,7 @@ public class createReminder extends AppCompatActivity {
                 locationView.setText(address);
                 existedAlarmNo = reminder.Alarm_No;
                 System.out.println("initialValue Alarm no " + existedAlarmNo);
+                repeat.setSelection(reminder.repeat);
                 showImage(reminder.image);
             }
         }
@@ -530,6 +531,7 @@ public class createReminder extends AppCompatActivity {
         reminder.location = geoLoc;
         reminder.Alarm_No = Alarm_No;
         reminder.image = currentPhotoPath;
+        reminder.repeat = repeat.getSelectedItemPosition();
         //TODO: need to update image path and voice file path.
         return gson.toJson(reminder);
     }
