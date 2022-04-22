@@ -63,7 +63,12 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".Alarm.Receiver" />
+        <receiver android:name=".Alarm.Receiver" android:exported="true" android:process=":remote">
+            <intent-filter>
+                <action android:name="mypackage.START_ALARM" >
+                </action>
+            </intent-filter>
+        </receiver>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

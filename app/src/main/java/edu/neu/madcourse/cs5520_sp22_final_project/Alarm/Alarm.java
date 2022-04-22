@@ -35,10 +35,36 @@ public class Alarm {
         YearMonth yearMonth = YearMonth.of(year, month);
         int maxDay = yearMonth.lengthOfMonth();
 
-        //month is 0-indexed
-        System.out.println(msg + "" + year + ", " + month + ", " +
-                Math.min(day, maxDay) + ", " + hour + ", " + min);
-        calendar.set(year, month - 1 , Math.min(day, maxDay), hour, min, 0);
+        switch (repeat) {
+            case "None":
+                System.out.println("none");
+                break;
+            case "Daily":
+                if (day > maxDay) {
+                    day -= maxDay;
+                    month++;
+                }
+                System.out.println(msg + "" + year + ", " + month + ", " + day + ", " + hour + ", " + min);
+                calendar.set(year, month - 1 , day, hour, min, 0);
+                break;
+            case "Weekly":
+                if (day > maxDay) {
+                    day -= maxDay;
+                    month++;
+                }
+                System.out.println(msg + "" + year + ", " + month + ", " + day + ", " + hour + ", " + min);
+                calendar.set(year, month - 1 , day, hour, min, 0);
+                break;
+            case "Monthly":
+                System.out.println("Monthly");
+                //month is 0-indexed
+                System.out.println(msg + "" + year + ", " + month + ", " +
+                        Math.min(day, maxDay) + ", " + hour + ", " + min);
+                calendar.set(year, month - 1 , Math.min(day, maxDay), hour, min, 0);
+                break;
+            default:
+                break;
+        }
 
         System.out.println("+++++++++++++++++");
         System.out.println("calendar" + calendar.getTimeInMillis());
@@ -71,30 +97,7 @@ public class Alarm {
             pItent = PendingIntent.getBroadcast(context, ALARM_NO, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         }
 
-        switch (repeat) {
-            case "None":
-                System.out.println("none");
-                alarm.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pItent);
-                break;
-            case "Daily":
-                System.out.println("Daily");
-                alarm.setRepeating(AlarmManager.RTC_WAKEUP,
-                        calendar.getTimeInMillis(), 24*60*60*1000,
-                        pItent);
-                break;
-            case "Weekly":
-                System.out.println("Weekly");
-                alarm.setRepeating(AlarmManager.RTC_WAKEUP,
-                        calendar.getTimeInMillis(), 7*24*60*60*1000,
-                        pItent);
-                break;
-            case "Monthly":
-                System.out.println("Monthly");
-                alarm.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pItent);
-                break;
-            default:
-                break;
-        }
+        alarm.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pItent);
 
         return ALARM_NO;
     }
