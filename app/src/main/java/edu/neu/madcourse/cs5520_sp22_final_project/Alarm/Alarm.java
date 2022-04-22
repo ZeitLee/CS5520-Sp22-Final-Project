@@ -14,6 +14,8 @@ import java.util.Calendar;
 import java.util.Random;
 import java.util.UUID;
 
+import edu.neu.madcourse.cs5520_sp22_final_project.SchedulePermission;
+
 public class Alarm {
     private final Context context;
     private int ALARM_NO = 10000000 + new Random().nextInt(900000000);
@@ -54,13 +56,19 @@ public class Alarm {
         intent.putExtra("min", min);
 
         System.out.println("Alarm_No: " + ALARM_NO);
-        PendingIntent pItent = PendingIntent.getBroadcast(context, ALARM_NO, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pItent;
         AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            pItent = PendingIntent.getBroadcast(context, ALARM_NO, intent, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_CANCEL_CURRENT);
+            System.out.println(alarm.canScheduleExactAlarms());
             if (!alarm.canScheduleExactAlarms()) {
-//               intent.setAction(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
+                Intent permission = new Intent(context, SchedulePermission.class);
+                permission.setAction(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
+                context.startActivity(permission);
             }
+        } else {
+            pItent = PendingIntent.getBroadcast(context, ALARM_NO, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         }
 
         switch (repeat) {
