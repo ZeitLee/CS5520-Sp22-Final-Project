@@ -199,7 +199,6 @@ public class createReminder extends AppCompatActivity {
         System.out.println(des);
 
         String repeatOption = repeat.getSelectedItem().toString();
-        System.out.println(repeatOption);
 
         System.out.println("existed Alarm: " + existedAlarmNo);
         Alarm_No = new Alarm(MainActivity
