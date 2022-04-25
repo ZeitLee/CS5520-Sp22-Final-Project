@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.gms.location.LocationCallback;
@@ -34,11 +35,13 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -57,13 +60,21 @@ public class MainActivity extends AppCompatActivity {
 
     public static WeakReference<MainActivity> weakActivity;
 
+    //allList
+    private final List<Reminder> allList = new ArrayList<>();
     private final ArrayList<Reminder> itemList = new ArrayList<>();
+
+    //hashTag search
+    private Spinner hashTag;
+    private ImageView searchBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         loc = new Loc(this);
+        hashTag = (Spinner) findViewById(R.id.search);
+        searchBtn = (ImageView) findViewById(R.id.searchBtn);
         loadComponent();
         loadListener();
         loadReminders();
@@ -115,6 +126,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void searchHashTag(int item, ArrayList list) {
+        list.clear();
+        for(Reminder reminder : allList) {
+            if (item == 0) list.add(reminder);
+            else if (reminder.hashtag == item - 1) list.add(reminder);
+        }
+    }
+
     private void loadComponent() {
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, MMM d");
@@ -136,6 +155,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        searchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("Clicked");
+                int item = hashTag.getSelectedItemPosition();
+                System.out.println("item number: " + item);
+                searchHashTag(item, itemList);
+                System.out.println(itemList);
+                rviewAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     private ArrayList<String> getIdList() {
@@ -163,6 +193,7 @@ public class MainActivity extends AppCompatActivity {
             String json = mSharedPreferences.getString(id, "");
             Reminder obj = gson.fromJson(json, Reminder.class);
             if (obj != null) {
+                allList.add(obj);
                 itemList.add(obj);
             }
         }
@@ -180,7 +211,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void createNewReminder() {
         Reminder newItem = new Reminder();
-        itemList.add(0, newItem);
+        allList.add(0, newItem);
+        searchHashTag(0, itemList);
         rviewAdapter.notifyItemInserted(0);
         idList.add(newItem.id);
         saveIdList();

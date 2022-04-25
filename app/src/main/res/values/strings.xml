@@ -9,4 +9,19 @@
         <item>Monthly</item>
     </string-array>
 
+    <string-array name="hashtag">
+        <item>None</item>
+        <item>Work</item>
+        <item>Study</item>
+        <item>Relax</item>
+    </string-array>
+
+    <string-array name="hashtag_search">
+        <item>All</item>
+        <item>None</item>
+        <item>Work</item>
+        <item>Study</item>
+        <item>Relax</item>
+    </string-array>
+
 </resources>

@@ -70,7 +70,6 @@ public class createReminder extends AppCompatActivity {
 
     private EditText nameInput;
     private EditText mDescription;
-    private EditText mHashtag;
     private TextView myTextDisplayDate;
     private TextView myTextDisplayTime;
     private DatePickerDialog.OnDateSetListener myDateSetListener;
@@ -112,6 +111,9 @@ public class createReminder extends AppCompatActivity {
     //alarm id
     private int Alarm_No;
 
+    //hashTag
+    private Spinner mHashtag;
+
     // Some local variables needed for saving pictures to storage
     static final int REQUEST_IMAGE_CAPTURE = 1;
     String currentPhotoPath; //can be retrieved later
@@ -128,7 +130,6 @@ public class createReminder extends AppCompatActivity {
         myTextDisplayTime = (TextView) findViewById(R.id.timeSelector);
         addPhoto = (ImageView) findViewById(R.id.photoImageView);
         mDescription = (EditText) findViewById(R.id.description);
-        mHashtag = (EditText) findViewById(R.id.hashTag);
         mapSelector = (ImageView) findViewById(R.id.mapSelector);
         done = (Button) findViewById(R.id.saveData);
         mRingtone = (TextView) findViewById(R.id.selectRingtone);
@@ -138,6 +139,9 @@ public class createReminder extends AppCompatActivity {
 
         //Alarm
         repeat = (Spinner) findViewById(R.id.repeat_options);
+
+        //Hash-Tag
+        mHashtag = (Spinner) findViewById(R.id.hashTag);
 
         //location
         loc = new Loc(this);
@@ -338,7 +342,7 @@ public class createReminder extends AppCompatActivity {
                 // set text view.
                 nameInput.setText(reminder.title);
                 mDescription.setText(reminder.description);
-                mHashtag.setText(reminder.hashtag);
+                mHashtag.setSelection(reminder.hashtag);
                 myTextDisplayDate.setText(reminder.date);
                 myTextDisplayTime.setText(reminder.time);
                 address = Loc.geoToAddress(reminder.location[0], reminder.location[1], this);
@@ -537,7 +541,7 @@ public class createReminder extends AppCompatActivity {
         String title = nameInput.getText().toString();
         reminder.title = !"".equals(title) ? title : "Task Name";
         reminder.description = mDescription.getText().toString();
-        reminder.hashtag = mHashtag.getText().toString();
+        reminder.hashtag = mHashtag.getSelectedItemPosition();
         reminder.location = geoLoc;
         reminder.Alarm_No = Alarm_No;
         reminder.image = currentPhotoPath;

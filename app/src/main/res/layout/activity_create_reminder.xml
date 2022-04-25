@@ -70,7 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="18dp"
             android:text="Select Ringtone"
             app:layout_constraintStart_toEndOf="@+id/imageView2"
             app:layout_constraintTop_toBottomOf="@+id/hashTag" />
@@ -160,27 +160,12 @@
             app:layout_constraintTop_toBottomOf="@+id/mapSelector"
             app:srcCompat="@drawable/people_foreground" />
 
-        <EditText
-            android:id="@+id/hashTag"
-            android:layout_width="254dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="8dp"
-            android:ems="10"
-            android:hint="Add Hashtag"
-            android:inputType="textPersonName"
-            android:text=""
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.656"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/photo" />
-
         <ImageView
             android:id="@+id/mic_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="144dp"
-            android:layout_marginTop="30dp"
+            android:layout_width="37dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="148dp"
+            android:layout_marginTop="36dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/location"
             app:srcCompat="@drawable/microphone_342" />
@@ -235,6 +220,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/dataImageView"
             app:layout_constraintVertical_bias="1.0" />
+
+        <Spinner
+            android:id="@+id/hashTag"
+            android:layout_width="167dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="25dp"
+            android:entries="@array/hashtag"
+            app:layout_constraintStart_toEndOf="@+id/imageView"
+            app:layout_constraintTop_toBottomOf="@+id/mic_icon" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

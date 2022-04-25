@@ -45,11 +45,26 @@
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="23dp"
             android:gravity="end">
+
+            <Spinner
+                android:id="@+id/search"
+                android:layout_width="167dp"
+                android:layout_height="48dp"
+                android:entries="@array/hashtag_search" />
+
+            <ImageView
+                android:id="@+id/searchBtn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                app:srcCompat="@android:drawable/ic_menu_search" />
             <ImageView
                 android:id="@+id/add_icon"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/add_icon" />
+                android:src="@drawable/add_icon"
+                android:layout_marginTop="10dp"/>
 
         </LinearLayout>
 
