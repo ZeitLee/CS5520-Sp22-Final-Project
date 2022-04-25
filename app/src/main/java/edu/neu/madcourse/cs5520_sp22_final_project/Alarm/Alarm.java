@@ -45,6 +45,10 @@ public class Alarm {
                     day -= maxDay;
                     month++;
                 }
+                if (month > 12) {
+                    month = 1;
+                    year++;
+                }
                 System.out.println(msg + "" + year + ", " + month + ", " + day + ", " + hour + ", " + min);
                 calendar.set(year, month - 1 , day, hour, min, 0);
                 break;
@@ -52,6 +56,10 @@ public class Alarm {
                 if (day > maxDay) {
                     day -= maxDay;
                     month++;
+                }
+                if (month > 12) {
+                    month = 1;
+                    year++;
                 }
                 System.out.println(msg + "" + year + ", " + month + ", " + day + ", " + hour + ", " + min);
                 calendar.set(year, month - 1 , day, hour, min, 0);

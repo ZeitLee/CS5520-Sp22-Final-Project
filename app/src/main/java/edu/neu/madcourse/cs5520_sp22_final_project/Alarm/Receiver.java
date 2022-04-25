@@ -43,6 +43,7 @@ public class Receiver extends BroadcastReceiver {
         int day = intent.getIntExtra("day", 1);
         switch (intent.getStringExtra("repeat")) {
             case "Monthly":
+                month++;
                 if (month > 12) {
                     month = 1;
                     year++;
