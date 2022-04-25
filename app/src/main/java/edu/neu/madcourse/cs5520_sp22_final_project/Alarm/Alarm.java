@@ -39,6 +39,7 @@ public class Alarm {
         switch (repeat) {
             case "None":
                 System.out.println("none");
+                calendar.set(year, month - 1 , day, hour, min, 0);
                 break;
             case "Daily":
                 if (day > maxDay) {
@@ -78,6 +79,7 @@ public class Alarm {
         System.out.println("+++++++++++++++++");
         System.out.println("calendar" + calendar.getTimeInMillis());
         System.out.println("now" + System.currentTimeMillis());
+        System.out.println(msg + "" + year + ", " + month + ", " + day + ", " + hour + ", " + min);
         System.out.println("+++++++++++++++++");
 
         Intent intent = new Intent(context, Receiver.class);
