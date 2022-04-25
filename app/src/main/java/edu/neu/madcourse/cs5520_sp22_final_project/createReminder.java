@@ -25,6 +25,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.media.Image;
 import android.net.Uri;
@@ -38,6 +39,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -48,6 +50,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -101,6 +105,10 @@ public class createReminder extends AppCompatActivity {
     TextView locationView;
     ActivityResultLauncher<Intent> intentActivityResultLauncher;
 
+    //Alarm
+    private Spinner repeat;
+    private int existedAlarmNo;
+
     //alarm id
     private int Alarm_No;
 
@@ -127,6 +135,9 @@ public class createReminder extends AppCompatActivity {
         mic = (ImageView) findViewById(R.id.mic_icon);
         photo = (ImageView) findViewById(R.id.photo);
         person = (ImageView) findViewById(R.id.person);
+
+        //Alarm
+        repeat = (Spinner) findViewById(R.id.repeat_options);
 
         //location
         loc = new Loc(this);
@@ -181,14 +192,24 @@ public class createReminder extends AppCompatActivity {
             return;
         }
         int[] dateSplit = toIntArray(date.split("/"));
-        System.out.println(Arrays.toString(dateSplit));
         int[] timeSplit = toIntArray(time.split(":"));
-        System.out.println(Arrays.toString(timeSplit));
         String des = mDescription.getText().toString();
+
+        System.out.println(Arrays.toString(dateSplit));
+        System.out.println(Arrays.toString(timeSplit));
         System.out.println(des);
-        Alarm_No = new Alarm(MainActivity.getMyInstanceActivity()).fireAlarm(des, dateSplit[2],
-                dateSplit[0], dateSplit[1], timeSplit[0], timeSplit[1]);
-        System.out.println("Alarm_No in create " + Alarm_No);
+
+        String repeatOption = repeat.getSelectedItem().toString();
+
+        System.out.println("existed Alarm: " + existedAlarmNo);
+        System.out.println("Ring Path: " + ringtonePath);
+
+        Alarm_No = new Alarm(MainActivity
+                .getMyInstanceActivity())
+                .fireAlarm(des, repeatOption, existedAlarmNo, ringtonePath,
+                        dateSplit[2], dateSplit[0], dateSplit[1],
+                        timeSplit[0], timeSplit[1]);
+
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
@@ -273,9 +294,10 @@ public class createReminder extends AppCompatActivity {
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //call backtoMain before settingDone
+                //do not call backtoMain twice
                 backtoMain(view);
                 settingDone();
-                backtoMain(view);
             }
         });
 
@@ -322,6 +344,13 @@ public class createReminder extends AppCompatActivity {
                 address = Loc.geoToAddress(reminder.location[0], reminder.location[1], this);
                 geoLoc = new double[]{reminder.location[0], reminder.location[1]};
                 locationView.setText(address);
+                existedAlarmNo = reminder.Alarm_No;
+                System.out.println("initialValue Alarm no " + existedAlarmNo);
+                repeat.setSelection(reminder.repeat);
+                ringtonePath = reminder.soundPath;
+                if (ringtonePath != null) {
+                    mRingtone.setText(ringtonePath);
+                }
                 showImage(reminder.image);
             }
         }
@@ -474,8 +503,11 @@ public class createReminder extends AppCompatActivity {
         // show a preview of the ringtone in the textview
         if (requestCode == 999 && resultCode == RESULT_OK) {
             Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-            mRingtone.setText("From :" + uri.getPath());
+            mRingtone.setText(uri.getPath());
             ringtonePath = uri.toString();
+
+//            MediaPlayer.create(this, Uri.parse("content://media/external_primary/audio/media/63?title=Your%20New%20Adventure&canonical=1")).start();
+
         }
     }
 
@@ -509,6 +541,8 @@ public class createReminder extends AppCompatActivity {
         reminder.location = geoLoc;
         reminder.Alarm_No = Alarm_No;
         reminder.image = currentPhotoPath;
+        reminder.repeat = repeat.getSelectedItemPosition();
+        reminder.soundPath = ringtonePath;
         //TODO: need to update image path and voice file path.
         return gson.toJson(reminder);
     }

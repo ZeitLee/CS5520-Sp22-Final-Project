@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
                         int Alarm_No = itemList.get(position).Alarm_No;
                         System.out.println("Alarm_no in Swipe" + Alarm_No);
                         Intent intent = new Intent(MainActivity.this, Receiver.class);
-                        PendingIntent pItent = PendingIntent.getBroadcast(MainActivity.this, Alarm_No, intent, 0);
+                        PendingIntent pItent = PendingIntent.getBroadcast(MainActivity.this, Alarm_No, intent, PendingIntent.FLAG_MUTABLE);
                         AlarmManager alarm = (AlarmManager) MainActivity.this.getSystemService(Context.ALARM_SERVICE);
                         alarm.cancel(pItent);
 

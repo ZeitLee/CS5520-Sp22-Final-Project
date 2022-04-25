@@ -5,6 +5,7 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
+
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
@@ -12,8 +13,7 @@
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="18" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <queries>
         <intent>
@@ -29,6 +29,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
         <activity
+            android:name=".SchedulePermission"
+            android:exported="false" />
+        <activity
             android:name=".Recording"
             android:exported="false" />
 
@@ -39,8 +42,8 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths">
-            </meta-data>>
+                android:resource="@xml/file_paths"></meta-data>
+            >
         </provider>
 
         <activity
@@ -60,8 +63,12 @@
             </intent-filter>
         </activity>
 
-
-        <receiver android:name=".Alarm.Receiver" />
+        <receiver android:name=".Alarm.Receiver" android:exported="true" android:process=":remote">
+            <intent-filter>
+                <action android:name="mypackage.START_ALARM" >
+                </action>
+            </intent-filter>
+        </receiver>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

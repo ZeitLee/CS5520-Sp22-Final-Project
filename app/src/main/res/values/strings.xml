@@ -2,4 +2,11 @@
     <string name="app_name">CS5520-Sp22-Final-Project</string>
     <!-- Strings used for fragments for navigation -->
 
+    <string-array name="repeat_option">
+        <item>None</item>
+        <item>Daily</item>
+        <item>Weekly</item>
+        <item>Monthly</item>
+    </string-array>
+
 </resources>
