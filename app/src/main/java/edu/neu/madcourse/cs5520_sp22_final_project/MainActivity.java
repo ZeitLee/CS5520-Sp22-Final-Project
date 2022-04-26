@@ -49,11 +49,13 @@ public class MainActivity extends AppCompatActivity {
     private ReminderAdapter rviewAdapter;
     private RecyclerView.LayoutManager rLayoutManger;
     private TextView dateDisplay;
+    private TextView scoreDisplay;
     private ImageView addIcon;
     private ArrayList<String> idList;
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor edit;
     private Gson gson;
+    private Integer score;
 
     //location
     private Loc loc;
@@ -141,9 +143,12 @@ public class MainActivity extends AppCompatActivity {
         dateDisplay = findViewById(R.id.main_date);
         dateDisplay.setText(currentDate);
         addIcon = findViewById(R.id.add_icon);
+        scoreDisplay = findViewById(R.id.score);
         mSharedPreferences = this.getSharedPreferences("reminder_info", MODE_PRIVATE);
         edit = mSharedPreferences.edit();
         gson = new Gson();
+        score = Integer.parseInt(mSharedPreferences.getString("score", "0"));
+        scoreDisplay.setText("Scores: " + score);
         createRecyclerView();
     }
 
@@ -205,6 +210,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         rviewAdapter = new ReminderAdapter(itemList);
         rviewAdapter.setEdit(edit);
+        rviewAdapter.setScore(scoreDisplay, score);
         recyclerView.setAdapter(rviewAdapter);
         recyclerView.setLayoutManager(rLayoutManger);
     }

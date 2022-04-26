@@ -6,6 +6,8 @@ import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -20,8 +22,15 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderViewHolder> {
     private final ArrayList<Reminder> itemList;
     private SharedPreferences.Editor edit;
     private Gson gson = new Gson();
+    private TextView scoreDisplay;
+    private Integer score;
     public ReminderAdapter(ArrayList<Reminder> itemList) {
         this.itemList = itemList;
+    }
+
+    public void setScore(TextView scoreDisplay, Integer score) {
+        this.scoreDisplay = scoreDisplay;
+        this.score = score;
     }
 
     @NonNull
@@ -63,9 +72,18 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderViewHolder> {
 
             @Override
             public void onClick(View v) {
-                item.completed = !item.completed;
+                if (item.completed) {
+                    item.completed = false;
+                    --score;
+                } else {
+                    item.completed = true;
+                    ++score;
+                    Toast.makeText(MainActivity.getMyInstanceActivity().getApplicationContext(), "Congratulation! You complete a task!", Toast.LENGTH_LONG).show();
+                }
+                scoreDisplay.setText("Score: " + score);
                 String json = gson.toJson(item);
                 edit.putString(item.id, json);
+                edit.putString("score", score.toString());
                 edit.apply();
                 notifyDataSetChanged();
             }
