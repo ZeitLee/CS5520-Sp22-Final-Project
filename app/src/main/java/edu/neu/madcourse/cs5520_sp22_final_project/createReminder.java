@@ -292,8 +292,6 @@ public class createReminder extends AppCompatActivity {
             }
         });
 
-
-
         // done button action.
         done.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -520,8 +518,8 @@ public class createReminder extends AppCompatActivity {
         if (path != null) {
             Bitmap bitmap = BitmapFactory.decodeFile(path);
             photo.setImageBitmap(bitmap);
+            currentPhotoPath = path;
         }
-
     }
 
 
@@ -547,7 +545,6 @@ public class createReminder extends AppCompatActivity {
         reminder.image = currentPhotoPath;
         reminder.repeat = repeat.getSelectedItemPosition();
         reminder.soundPath = ringtonePath;
-        //TODO: need to update image path and voice file path.
         return gson.toJson(reminder);
     }
 
