@@ -8,6 +8,7 @@ import androidx.core.content.PackageManagerCompat;
 
 import android.Manifest;
 import android.content.ContextWrapper;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -50,10 +51,7 @@ public class Recording extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recording);
-
         initialElements();
-
-
     }
 
     /**
@@ -68,6 +66,11 @@ public class Recording extends AppCompatActivity {
         executorService = Executors.newSingleThreadExecutor();
 
         mediaPlayer = new MediaPlayer();
+
+        Bundle extras = getIntent().getExtras();
+        if (extras.containsKey("localRecordingFile")) {
+            path = extras.getString("localRecordingFile");
+        }
 
         setStartButton();
         setPlayerButton();
@@ -96,7 +99,7 @@ public class Recording extends AppCompatActivity {
                 if (!isPlaying) {
                     if (path != null) {
                         try {
-                            mediaPlayer.setDataSource(getRecordingFilePath());
+                            mediaPlayer.setDataSource(path);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -244,6 +247,17 @@ public class Recording extends AppCompatActivity {
         ContextWrapper contextWrapper = new ContextWrapper(getApplicationContext());
         File music = contextWrapper.getExternalFilesDir(Environment.DIRECTORY_MUSIC);
         File file = new File(music, "recording" + ".mp3");
-        return file.getPath();
+        path = file.getPath();
+        return path;
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(this, createReminder.class);
+        if (path != null) {
+            i.putExtra("recordingFile", path);
+        }
+        i.putExtra("No recording", "No");
+        startActivity(i);
     }
 }

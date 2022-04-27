@@ -11,7 +11,7 @@ public class Reminder {
     public String title;
     public String description;
     public String image;
-    public Voice voice;
+    public String voice;
     public String date;
     public String time;
     public int hashtag;
@@ -40,7 +40,7 @@ public class Reminder {
     }
 
     public Reminder(String id, String title, String description, int hashtag, String image,
-                    Voice voice, String date, int Alarm_No, int repeat,
+                    String voice, String date, int Alarm_No, int repeat,
                     String time, double[] location, String[] contact, boolean complete) {
         this.id = id;
         this.title = title;

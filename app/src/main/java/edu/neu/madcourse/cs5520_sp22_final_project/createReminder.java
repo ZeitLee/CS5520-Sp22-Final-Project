@@ -129,6 +129,7 @@ public class createReminder extends AppCompatActivity {
     // Some local variables needed for saving pictures to storage
     static final int REQUEST_IMAGE_CAPTURE = 1;
     String currentPhotoPath; //can be retrieved later
+    String currentRecordingPath;
 
 
 
@@ -378,6 +379,9 @@ public class createReminder extends AppCompatActivity {
                     contactPhoneText.setText(contact[1]);
                     contactEmailText.setText(contact[2]);
                 }
+
+                currentRecordingPath = reminder.voice;
+
             }
         }
     }
@@ -414,6 +418,10 @@ public class createReminder extends AppCompatActivity {
 
     private void showRecordingActivity() {
         Intent intent = new Intent(this, Recording.class);
+        if (currentRecordingPath != null) {
+            intent.putExtra("localRecordingFile", currentRecordingPath);
+        }
+        intent.putExtra("No path", "No voice");
         startActivity(intent);
     }
 
@@ -578,6 +586,14 @@ public class createReminder extends AppCompatActivity {
         mSharedEditor.apply();
     }
 
+    //Helper to get recording path.
+    private void getRecordingFilePath() {
+        Bundle extras = getIntent().getExtras();
+        if (extras.containsKey("recordingFile")) {
+            currentRecordingPath = extras.getString("recordingFile");
+        }
+    }
+
     // Helper method build json string based on current data.
     private String buildJson() {
         String title = nameInput.getText().toString();
@@ -590,6 +606,8 @@ public class createReminder extends AppCompatActivity {
         reminder.repeat = repeat.getSelectedItemPosition();
         reminder.soundPath = ringtonePath;
         reminder.contact = contact;
+        getRecordingFilePath();
+        reminder.voice = currentRecordingPath;
         return gson.toJson(reminder);
     }
 
