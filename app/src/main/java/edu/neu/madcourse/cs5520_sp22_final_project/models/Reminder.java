@@ -20,6 +20,8 @@ public class Reminder {
     public int Alarm_No;
     public int repeat;
     public String soundPath;
+    // Contact information.
+    public String[] contact;
 
     public Reminder() {
         id = UUID.randomUUID().toString();
@@ -34,11 +36,12 @@ public class Reminder {
         completed = false;
         repeat = 0;
         soundPath = null;
+        contact = null;
     }
 
     public Reminder(String id, String title, String description, int hashtag, String image,
                     Voice voice, String date, int Alarm_No, int repeat,
-                    String time, double[] location, boolean complete) {
+                    String time, double[] location, String[] contact, boolean complete) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -51,5 +54,6 @@ public class Reminder {
         this.completed = complete;
         this.Alarm_No = Alarm_No;
         this.repeat = repeat;
+        this.contact = contact;
     }
 }

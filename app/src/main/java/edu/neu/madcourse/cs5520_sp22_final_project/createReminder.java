@@ -15,6 +15,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -25,6 +26,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.icu.text.SymbolTable;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.media.Image;
@@ -61,6 +63,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import edu.neu.madcourse.cs5520_sp22_final_project.models.Contact;
 import edu.neu.madcourse.cs5520_sp22_final_project.models.Reminder;
 
 import edu.neu.madcourse.cs5520_sp22_final_project.Alarm.Alarm;
@@ -114,9 +117,19 @@ public class createReminder extends AppCompatActivity {
     //hashTag
     private Spinner mHashtag;
 
+    // Contact view.
+    View contactView;
+    //contact info.
+    private String[] contact;
+
+    private EditText contactNameText;
+    private EditText contactPhoneText;
+    private EditText contactEmailText;
+
     // Some local variables needed for saving pictures to storage
     static final int REQUEST_IMAGE_CAPTURE = 1;
     String currentPhotoPath; //can be retrieved later
+
 
 
     @Override
@@ -137,6 +150,11 @@ public class createReminder extends AppCompatActivity {
         photo = (ImageView) findViewById(R.id.photo);
         person = (ImageView) findViewById(R.id.person);
 
+        contactView = getLayoutInflater().inflate(R.layout.person_information, null);
+        contactNameText = (EditText) contactView.findViewById(R.id.personName);
+        contactPhoneText = (EditText) contactView.findViewById(R.id.personPhone);
+        contactEmailText = (EditText) contactView.findViewById(R.id.personEmail);
+
         //Alarm
         repeat = (Spinner) findViewById(R.id.repeat_options);
 
@@ -146,8 +164,6 @@ public class createReminder extends AppCompatActivity {
         //location
         loc = new Loc(this);
         locationView = findViewById(R.id.location);
-        //TODO: I just comment this line because it will always show the default location at the
-        // create menu.(Zesheng)
 
         geoLoc = new double[2];
         currLoc = getIntent().getDoubleArrayExtra("loc");
@@ -354,17 +370,46 @@ public class createReminder extends AppCompatActivity {
                     mRingtone.setText(ringtonePath);
                 }
                 showImage(reminder.image);
+                if (reminder.contact != null) {
+                    contact = new String[]{reminder.contact[0], reminder.contact[1],
+                            reminder.contact[2]};
+
+                    contactNameText.setText(contact[0]);
+                    contactPhoneText.setText(contact[1]);
+                    contactEmailText.setText(contact[2]);
+                }
             }
         }
     }
 
     private void showContactDialog() {
         dialogBuilder = new AlertDialog.Builder(this);
-        final View contactView = getLayoutInflater().inflate(R.layout.person_information, null);
 
+        dialogBuilder.setPositiveButton("OK" , new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                EditText edt1 = (EditText) contactView.findViewById(R.id.personName);
+                // User clicked OK button
+                // save contact information.
+                contact = saveContactInfo();
+            }
+        });
+        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog, do nothing.
+            }
+        });
         dialogBuilder.setView(contactView);
         dialog = dialogBuilder.create();
         dialog.show();
+    }
+
+    // Helper to save contact information.
+    private String[] saveContactInfo() {
+        String[] res = new String[3];
+        res[0] = contactNameText.getText().toString();
+        res[1] = contactPhoneText.getText().toString();
+        res[2] = contactEmailText.getText().toString();
+        return res;
     }
 
     private void showRecordingActivity() {
@@ -508,9 +553,7 @@ public class createReminder extends AppCompatActivity {
             Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
             mRingtone.setText(uri.getPath());
             ringtonePath = uri.toString();
-
 //            MediaPlayer.create(this, Uri.parse("content://media/external_primary/audio/media/63?title=Your%20New%20Adventure&canonical=1")).start();
-
         }
     }
 
@@ -546,6 +589,7 @@ public class createReminder extends AppCompatActivity {
         reminder.image = currentPhotoPath;
         reminder.repeat = repeat.getSelectedItemPosition();
         reminder.soundPath = ringtonePath;
+        reminder.contact = contact;
         return gson.toJson(reminder);
     }
 
