@@ -493,10 +493,11 @@ public class createReminder extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Bitmap scaledImage = Bitmap.createScaledBitmap(imageBitmap, 400, 400, false);
+            photo.setImageBitmap(imageBitmap);
+//            Bitmap scaledImage = Bitmap.createScaledBitmap(imageBitmap, 400, 400, false);
             //addPhoto.setImageBitmap(imageBitmap);
-            Drawable d = new BitmapDrawable(getResources(), scaledImage);
-            mDescription.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null);
+            //Drawable d = new BitmapDrawable(getResources(), scaledImage);
+            //mDescription.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null);
 
             toast = Toast.makeText(getApplicationContext(), "Image saved successfully!", Toast.LENGTH_SHORT);
             toast.show();
