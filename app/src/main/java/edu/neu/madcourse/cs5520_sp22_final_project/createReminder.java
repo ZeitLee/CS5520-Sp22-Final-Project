@@ -151,10 +151,29 @@ public class createReminder extends AppCompatActivity {
         photo = (ImageView) findViewById(R.id.photo);
         person = (ImageView) findViewById(R.id.person);
 
+        dialogBuilder = new AlertDialog.Builder(this);
+
         contactView = getLayoutInflater().inflate(R.layout.person_information, null);
         contactNameText = (EditText) contactView.findViewById(R.id.personName);
         contactPhoneText = (EditText) contactView.findViewById(R.id.personPhone);
         contactEmailText = (EditText) contactView.findViewById(R.id.personEmail);
+
+        dialogBuilder.setView(contactView);
+
+        dialogBuilder.setPositiveButton("OK" , new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked OK button
+                // save contact information.
+                contact = saveContactInfo();
+            }
+        });
+        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog, do nothing.
+            }
+        });
+
+        dialog = dialogBuilder.create();
 
         //Alarm
         repeat = (Spinner) findViewById(R.id.repeat_options);
@@ -387,23 +406,9 @@ public class createReminder extends AppCompatActivity {
     }
 
     private void showContactDialog() {
-        dialogBuilder = new AlertDialog.Builder(this);
+        //contactView = getLayoutInflater().inflate(R.layout.person_information, null);
 
-        dialogBuilder.setPositiveButton("OK" , new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                EditText edt1 = (EditText) contactView.findViewById(R.id.personName);
-                // User clicked OK button
-                // save contact information.
-                contact = saveContactInfo();
-            }
-        });
-        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog, do nothing.
-            }
-        });
-        dialogBuilder.setView(contactView);
-        dialog = dialogBuilder.create();
+
         dialog.show();
     }
 
