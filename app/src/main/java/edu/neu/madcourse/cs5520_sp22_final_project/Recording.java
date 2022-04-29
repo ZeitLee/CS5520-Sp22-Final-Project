@@ -86,7 +86,8 @@ public class Recording extends AppCompatActivity {
         finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                backToTask();
+
+                //backToTask();
             }
         });
     }

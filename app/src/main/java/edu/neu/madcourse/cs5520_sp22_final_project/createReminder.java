@@ -110,6 +110,8 @@ public class createReminder extends AppCompatActivity {
     String currentPhotoPath; //can be retrieved later
     String currentRecordingPath;
 
+    MainActivity weakRefMain;
+
 
 
     @Override
@@ -129,6 +131,8 @@ public class createReminder extends AppCompatActivity {
         mic = (ImageView) findViewById(R.id.mic_icon);
         photo = (ImageView) findViewById(R.id.photo);
         person = (ImageView) findViewById(R.id.person);
+
+        weakRefMain = MainActivity.getMyInstanceActivity();
 
 
         //Alarm
@@ -202,8 +206,7 @@ public class createReminder extends AppCompatActivity {
         System.out.println("existed Alarm: " + existedAlarmNo);
         System.out.println("Ring Path: " + ringtonePath);
 
-        Alarm_No = new Alarm(MainActivity
-                .getMyInstanceActivity())
+        Alarm_No = new Alarm(weakRefMain)
                 .fireAlarm(des, repeatOption, existedAlarmNo, ringtonePath,
                         dateSplit[2], dateSplit[0], dateSplit[1],
                         timeSplit[0], timeSplit[1]);
@@ -359,9 +362,7 @@ public class createReminder extends AppCompatActivity {
                     contactPhoneText.setText(contact[1]);
                     contactEmailText.setText(contact[2]);
                 }
-
                 currentRecordingPath = reminder.voice;
-
             }
         }
     }
@@ -388,14 +389,10 @@ public class createReminder extends AppCompatActivity {
                 // User cancelled the dialog, do nothing.
             }
         });
-
         dialog = dialogBuilder.create();
     }
 
     private void showContactDialog() {
-        //contactView = getLayoutInflater().inflate(R.layout.person_information, null);
-
-
         dialog.show();
     }
 
@@ -454,8 +451,6 @@ public class createReminder extends AppCompatActivity {
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
     }
-
-
 
     /*
     Default path for the images:
@@ -565,7 +560,6 @@ public class createReminder extends AppCompatActivity {
         }
     }
 
-
     /**
      * Helper method to handle done button.
      * convert all data to json and save date to shared preference.
@@ -608,25 +602,25 @@ public class createReminder extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         AlertDialog.Builder exitDialog = new AlertDialog.Builder(this);
-        exitDialog.setMessage("Your changes will not be saved.\n" +
-                "Do you want to back to main menu?");
+//        exitDialog.setMessage("Your changes will not be saved.\n" +
+//                "Do you want to back to main menu?");
+        exitDialog.setMessage("Auto save changes......");
 
         exitDialog.setPositiveButton("OK" , new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked OK button
                 // save contact information.
+                settingDone();
                 finish();
             }
         });
-        exitDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog, do nothing.
-                dialog.cancel();
-            }
-        });
-
+//        exitDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//            public void onClick(DialogInterface dialog, int id) {
+//                // User cancelled the dialog, do nothing.
+//                dialog.cancel();
+//            }
+//        });
         exitDialog.create().show();
-
     }
 }
 
