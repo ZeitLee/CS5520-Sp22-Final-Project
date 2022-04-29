@@ -4,38 +4,26 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
-import androidx.lifecycle.LifecycleOwner;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 //import android.graphics.Camera;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.icu.text.SymbolTable;
-import android.media.MediaPlayer;
 import android.media.RingtoneManager;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -50,20 +38,11 @@ import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
-import java.util.UUID;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
-import edu.neu.madcourse.cs5520_sp22_final_project.models.Contact;
 import edu.neu.madcourse.cs5520_sp22_final_project.models.Reminder;
 
 import edu.neu.madcourse.cs5520_sp22_final_project.Alarm.Alarm;
@@ -151,29 +130,6 @@ public class createReminder extends AppCompatActivity {
         photo = (ImageView) findViewById(R.id.photo);
         person = (ImageView) findViewById(R.id.person);
 
-        dialogBuilder = new AlertDialog.Builder(this);
-
-        contactView = getLayoutInflater().inflate(R.layout.person_information, null);
-        contactNameText = (EditText) contactView.findViewById(R.id.personName);
-        contactPhoneText = (EditText) contactView.findViewById(R.id.personPhone);
-        contactEmailText = (EditText) contactView.findViewById(R.id.personEmail);
-
-        dialogBuilder.setView(contactView);
-
-        dialogBuilder.setPositiveButton("OK" , new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User clicked OK button
-                // save contact information.
-                contact = saveContactInfo();
-            }
-        });
-        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog, do nothing.
-            }
-        });
-
-        dialog = dialogBuilder.create();
 
         //Alarm
         repeat = (Spinner) findViewById(R.id.repeat_options);
@@ -359,6 +315,9 @@ public class createReminder extends AppCompatActivity {
         mSharedPreference = getSharedPreferences("reminder_info", MODE_PRIVATE);
         mSharedEditor = mSharedPreference.edit();
         gson = new Gson();
+
+        // initial contact dialog.
+        initialDiglog();
     }
 
     /**
@@ -405,6 +364,32 @@ public class createReminder extends AppCompatActivity {
         }
     }
 
+    private void initialDiglog() {
+        dialogBuilder = new AlertDialog.Builder(this);
+
+        contactView = getLayoutInflater().inflate(R.layout.person_information, null);
+        contactNameText = (EditText) contactView.findViewById(R.id.personName);
+        contactPhoneText = (EditText) contactView.findViewById(R.id.personPhone);
+        contactEmailText = (EditText) contactView.findViewById(R.id.personEmail);
+
+        dialogBuilder.setView(contactView);
+
+        dialogBuilder.setPositiveButton("OK" , new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked OK button
+                // save contact information.
+                contact = saveContactInfo();
+            }
+        });
+        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog, do nothing.
+            }
+        });
+
+        dialog = dialogBuilder.create();
+    }
+
     private void showContactDialog() {
         //contactView = getLayoutInflater().inflate(R.layout.person_information, null);
 
@@ -423,10 +408,7 @@ public class createReminder extends AppCompatActivity {
 
     private void showRecordingActivity() {
         Intent intent = new Intent(this, Recording.class);
-        if (currentRecordingPath != null) {
-            intent.putExtra("localRecordingFile", currentRecordingPath);
-        }
-        intent.putExtra("No path", "No voice");
+        intent.putExtra("localRecordingFile", currentRecordingPath);
         startActivity(intent);
     }
 
@@ -616,6 +598,29 @@ public class createReminder extends AppCompatActivity {
         return gson.toJson(reminder);
     }
 
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder exitDialog = new AlertDialog.Builder(this);
+        exitDialog.setMessage("Your changes will not be saved.\n" +
+                "Do you want to back to main menu?");
+
+        exitDialog.setPositiveButton("OK" , new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked OK button
+                // save contact information.
+                finish();
+            }
+        });
+        exitDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog, do nothing.
+                dialog.cancel();
+            }
+        });
+
+        exitDialog.create().show();
+
+    }
 }
 
 
