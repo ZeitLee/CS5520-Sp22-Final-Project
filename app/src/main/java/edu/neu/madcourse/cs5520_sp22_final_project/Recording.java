@@ -47,11 +47,15 @@ public class Recording extends AppCompatActivity {
 
     ExecutorService executorService;
 
+    private Button finish;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recording);
         initialElements();
+        seconds = 0;
+        dummySeconds = 0;
     }
 
     /**
@@ -72,8 +76,31 @@ public class Recording extends AppCompatActivity {
             path = extras.getString("localRecordingFile");
         }
 
+        System.out.println("Current path: " + path);
+
         setStartButton();
         setPlayerButton();
+
+        finish = (Button) findViewById(R.id.finish);
+
+        finish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                backToTask();
+            }
+        });
+    }
+
+    private void backToTask() {
+        Intent i = new Intent(this, createReminder.class);
+        if (path != null) {
+            i.putExtra("recordingFile", path);
+        }
+        // save location info.
+        i.putExtra("loc", getIntent().
+                getDoubleArrayExtra("currentLocation"));
+
+        startActivity(i);
     }
 
     // set start button click listener.
@@ -110,6 +137,9 @@ public class Recording extends AppCompatActivity {
                     }
                     try {
                         mediaPlayer.prepare();
+                        playableSeconds = (Integer.valueOf(mediaPlayer.getDuration()) / 1000) + 1;
+                        System.out.println(playableSeconds);
+                        dummySeconds = playableSeconds;
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -251,13 +281,19 @@ public class Recording extends AppCompatActivity {
         return path;
     }
 
+
+
     @Override
     public void onBackPressed() {
         Intent i = new Intent(this, createReminder.class);
         if (path != null) {
             i.putExtra("recordingFile", path);
         }
-        i.putExtra("No recording", "No");
+        System.out.println("save path: " + path);
+        // save location info.
+        //i.putExtra("loc", getIntent().getDoubleArrayExtra("currentLocation"));
+        // give back this reminder id.
+        i.putExtra("id", getIntent().getExtras().getString("id"));
         startActivity(i);
     }
 }

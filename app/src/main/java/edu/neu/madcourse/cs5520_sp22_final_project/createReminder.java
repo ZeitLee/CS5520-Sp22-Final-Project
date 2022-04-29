@@ -165,6 +165,8 @@ public class createReminder extends AppCompatActivity {
 
         System.out.println("geoloc");
         System.out.println(Arrays.toString(geoLoc));
+        System.out.println("curLoc");
+        System.out.println(Arrays.toString(currLoc));
         if (geoLoc[0] == 0 && geoLoc[1] == 0) {
             if (currLoc[0] == 0 && currLoc[1] == 0) {
                 loc.setViewLocation(locationView);
@@ -408,6 +410,8 @@ public class createReminder extends AppCompatActivity {
 
     private void showRecordingActivity() {
         Intent intent = new Intent(this, Recording.class);
+        settingDone();
+        intent.putExtra("id", reminder.id);
         intent.putExtra("localRecordingFile", currentRecordingPath);
         startActivity(intent);
     }
@@ -598,6 +602,9 @@ public class createReminder extends AppCompatActivity {
         return gson.toJson(reminder);
     }
 
+    /**
+     * Handle user used back button.
+     */
     @Override
     public void onBackPressed() {
         AlertDialog.Builder exitDialog = new AlertDialog.Builder(this);
