@@ -689,13 +689,13 @@ public class createReminder extends AppCompatActivity {
         AlertDialog.Builder exitDialog = new AlertDialog.Builder(this);
         exitDialog.setMessage("Your changes will not be saved.\n" +
                 "Do you want to back to main menu?");
-        //exitDialog.setMessage("Auto save changes......");
+//        exitDialog.setMessage("Auto save changes......");
 
         exitDialog.setPositiveButton("OK" , new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked OK button
-                // save contact information.
-                finish();
+                backtoMain();
+                settingDone();
             }
         });
         exitDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
