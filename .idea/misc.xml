@@ -6,7 +6,8 @@
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2365" />
         <entry key="app/src/main/res/drawable/add_photo_foreground.xml" value="0.1425" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.175" />
-        <entry key="app/src/main/res/layout-land/activity_create_reminder.xml" value="0.22083333333333333" />
+        <entry key="app/src/main/res/layout-land/activity_create_reminder.xml" value="0.32118804931640627" />
+        <entry key="app/src/main/res/layout-land/activity_main.xml" value="0.26146384479717816" />
         <entry key="app/src/main/res/layout/activity_create_reminder.xml" value="0.27419354838709675" />
         <entry key="app/src/main/res/layout/activity_location.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.33" />
