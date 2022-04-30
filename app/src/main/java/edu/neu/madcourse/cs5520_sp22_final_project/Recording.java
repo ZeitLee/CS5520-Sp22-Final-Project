@@ -105,15 +105,6 @@ public class Recording extends AppCompatActivity {
         setStartButton();
         setPlayerButton();
 
-        //finish = (Button) findViewById(R.id.finish);
-
-//        finish.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                onBackPressed();
-//            }
-//        });
-
     }
 
     // set start button click listener.
