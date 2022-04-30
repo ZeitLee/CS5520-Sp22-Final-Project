@@ -473,6 +473,15 @@ public class createReminder extends AppCompatActivity {
         dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User cancelled the dialog, do nothing.
+                if (contact == null) {
+                    contact = new String[3];
+                    contact[0] = "Name";
+                    contact[1] = "Phone Number";
+                    contact[2] = "Email";
+                }
+                contactNameText.setText(contact[0]);
+                contactPhoneText.setText(contact[1]);
+                contactEmailText.setText(contact[2]);
             }
         });
         dialog = dialogBuilder.create();
@@ -678,24 +687,23 @@ public class createReminder extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         AlertDialog.Builder exitDialog = new AlertDialog.Builder(this);
-//        exitDialog.setMessage("Your changes will not be saved.\n" +
-//                "Do you want to back to main menu?");
-        exitDialog.setMessage("Auto save changes......");
+        exitDialog.setMessage("Your changes will not be saved.\n" +
+                "Do you want to back to main menu?");
+        //exitDialog.setMessage("Auto save changes......");
 
         exitDialog.setPositiveButton("OK" , new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked OK button
                 // save contact information.
-                backtoMain();
-                settingDone();
+                finish();
             }
         });
-//        exitDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-//            public void onClick(DialogInterface dialog, int id) {
-//                // User cancelled the dialog, do nothing.
-//                dialog.cancel();
-//            }
-//        });
+        exitDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog, do nothing.
+                dialog.cancel();
+            }
+        });
         exitDialog.create().show();
     }
 }

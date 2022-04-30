@@ -73,6 +73,7 @@ public class Recording extends AppCompatActivity {
 
         setImageViewAnimaiton(startRecord);
         setImageViewAnimaiton(play);
+
     }
 
     /**
@@ -187,6 +188,7 @@ public class Recording extends AppCompatActivity {
                     playableSeconds--;
 
                     if (isPlaying && playableSeconds == -1) {
+                        play.setImageResource(R.drawable.play_button);
                         mediaPlayer.stop();
                         mediaPlayer.release();
                         mediaPlayer = null;
@@ -194,6 +196,7 @@ public class Recording extends AppCompatActivity {
                         playableSeconds = dummySeconds;
                         seconds = 0;
                         handler.removeCallbacksAndMessages(null);
+                        isPlaying = false;
                         return;
                     }
                 }

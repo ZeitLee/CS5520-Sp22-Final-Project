@@ -18,8 +18,11 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Looper;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -56,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences.Editor edit;
     private Gson gson;
     private Integer score;
+
+    Animation scaleUp, scaleDown;
 
     //location
     private Loc loc;
@@ -112,6 +117,12 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
         itemTouchHelper.attachToRecyclerView(recyclerView);
+
+        // set animaiton.
+        scaleUp = AnimationUtils.loadAnimation(this, R.anim.scale_up);
+        scaleDown = AnimationUtils.loadAnimation(this, R.anim.scale_down);
+
+        setImageViewAnimaiton(addIcon);
     }
 
     @Override
@@ -238,4 +249,18 @@ public class MainActivity extends AppCompatActivity {
         return weakActivity.get();
     }
 
+    //Helper to set textView animation.
+    private void setImageViewAnimaiton(ImageView img) {
+        img.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    img.startAnimation(scaleUp);
+                } else if (motionEvent.getAction() == MotionEvent.ACTION_UP){
+                    img.startAnimation(scaleDown);
+                }
+                return false;
+            }
+        });
+    }
 }
