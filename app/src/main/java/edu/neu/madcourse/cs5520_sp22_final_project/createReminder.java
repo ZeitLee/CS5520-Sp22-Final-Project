@@ -119,6 +119,7 @@ public class createReminder extends AppCompatActivity {
     //button animation.
     Animation scaleUp, scaleDown;
 
+    private TextView recordingView;
 
 
     @Override
@@ -138,6 +139,7 @@ public class createReminder extends AppCompatActivity {
         mic = (ImageView) findViewById(R.id.mic_icon);
         photo = (ImageView) findViewById(R.id.photo);
         person = (ImageView) findViewById(R.id.person);
+        recordingView = (TextView) findViewById(R.id.recordingText);
 
 
         //Alarm
@@ -358,6 +360,7 @@ public class createReminder extends AppCompatActivity {
                         if (result.getResultCode() == 1) {
                             assert result.getData() != null;
                             currentRecordingPath = result.getData().getStringExtra("recordingFile");
+                            recordingView.setText("Saved Recording");
                         }
                     }
                 });
@@ -449,6 +452,7 @@ public class createReminder extends AppCompatActivity {
                     contactEmailText.setText(contact[2]);
                 }
                 currentRecordingPath = reminder.voice;
+                if (currentRecordingPath != null) recordingView.setText("Saved Recording");
             }
         }
     }
