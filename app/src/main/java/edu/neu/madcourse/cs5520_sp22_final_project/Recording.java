@@ -87,22 +87,9 @@ public class Recording extends AppCompatActivity {
         finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                //backToTask();
+                onBackPressed();
             }
         });
-    }
-
-    private void backToTask() {
-        Intent i = new Intent(this, createReminder.class);
-        if (path != null) {
-            i.putExtra("recordingFile", path);
-        }
-        // save location info.
-        i.putExtra("loc", getIntent().
-                getDoubleArrayExtra("currentLocation"));
-
-        startActivity(i);
     }
 
     // set start button click listener.
@@ -289,16 +276,15 @@ public class Recording extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent i = new Intent(this, createReminder.class);
+        Intent returnIntent = new Intent();
         if (path != null) {
-            i.putExtra("recordingFile", path);
+            returnIntent.putExtra("recordingFile", path);
+            setResult(1, returnIntent);
+        } else {
+            setResult(0, returnIntent);
         }
-        System.out.println("save path: " + path);
-        // save location info.
-        //i.putExtra("loc", getIntent().getDoubleArrayExtra("currentLocation"));
-        // give back this reminder id.
-        i.putExtra("id", getIntent().getExtras().getString("id"));
-        startActivity(i);
+        super.onBackPressed();
+        finish();
     }
 
 }

@@ -110,6 +110,9 @@ public class createReminder extends AppCompatActivity {
     String currentPhotoPath; //can be retrieved later
     String currentRecordingPath;
 
+    //record activity result launcher
+    ActivityResultLauncher<Intent> recordLauncher;
+
 
 
     @Override
@@ -156,6 +159,19 @@ public class createReminder extends AppCompatActivity {
                             assert result.getData() != null;
                             geoLoc = result.getData().getDoubleArrayExtra("address");
                             locationView.setText(Loc.geoToAddress(geoLoc[0], geoLoc[1], createReminder.this));
+                        }
+                    }
+                });
+
+
+        recordLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == 1) {
+                            assert result.getData() != null;
+                            currentRecordingPath = result.getData().getStringExtra("recordingFile");
                         }
                     }
                 });
@@ -408,10 +424,8 @@ public class createReminder extends AppCompatActivity {
 
     private void showRecordingActivity() {
         Intent intent = new Intent(this, Recording.class);
-        settingDone();
-        intent.putExtra("id", reminder.id);
         intent.putExtra("localRecordingFile", currentRecordingPath);
-        startActivity(intent);
+        recordLauncher.launch(intent);
     }
 
     // This is a helper method to show map selector screen.
@@ -592,7 +606,7 @@ public class createReminder extends AppCompatActivity {
         reminder.repeat = repeat.getSelectedItemPosition();
         reminder.soundPath = ringtonePath;
         reminder.contact = contact;
-        getRecordingFilePath();
+//        getRecordingFilePath();
         reminder.voice = currentRecordingPath;
         return gson.toJson(reminder);
     }
