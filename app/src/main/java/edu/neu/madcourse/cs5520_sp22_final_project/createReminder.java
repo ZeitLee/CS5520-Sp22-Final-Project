@@ -478,7 +478,7 @@ public class createReminder extends AppCompatActivity {
                 repeat.setSelection(reminder.repeat);
                 ringtonePath = reminder.soundPath;
                 if (ringtonePath != null) {
-                    mRingtone.setText("Saved Ring");
+                    mRingtone.setText("Selected ringtone saved");
                 }
                 showImage(reminder.image);
                 if (reminder.contact != null) {
