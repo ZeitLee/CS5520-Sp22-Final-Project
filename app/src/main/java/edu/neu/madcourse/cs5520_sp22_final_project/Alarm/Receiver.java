@@ -34,7 +34,7 @@ public class Receiver extends BroadcastReceiver {
                     m.reset();
                     m.release();
                 }
-            }, 60000);
+            }, 15000);
         }
 
 
