@@ -6,14 +6,13 @@
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2365" />
         <entry key="app/src/main/res/drawable/add_photo_foreground.xml" value="0.1425" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.175" />
-        <entry key="app/src/main/res/layout-land/activity_create_reminder.xml" value="0.20780792236328127" />
-        <entry key="app/src/main/res/layout-land/activity_main.xml" value="0.2006172839506173" />
-        <entry key="app/src/main/res/layout-land/activity_recording.xml" value="0.2006172839506173" />
-        <entry key="app/src/main/res/layout/activity_create_reminder.xml" value="0.20337677001953125" />
+        <entry key="app/src/main/res/layout-land/activity_create_reminder.xml" value="0.32118804931640627" />
+        <entry key="app/src/main/res/layout-land/activity_main.xml" value="0.26146384479717816" />
+        <entry key="app/src/main/res/layout/activity_create_reminder.xml" value="0.27419354838709675" />
         <entry key="app/src/main/res/layout/activity_location.xml" value="0.22" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_map.xml" value="0.17147922998986828" />
-        <entry key="app/src/main/res/layout/activity_recording.xml" value="0.2216256927211958" />
+        <entry key="app/src/main/res/layout/activity_recording.xml" value="0.17325227963525835" />
         <entry key="app/src/main/res/layout/activity_schedule_permission.xml" value="0.12031408308004053" />
         <entry key="app/src/main/res/layout/fragment_map.xml" value="0.1" />
         <entry key="app/src/main/res/layout/map_fragment.xml" value="0.17708333333333334" />

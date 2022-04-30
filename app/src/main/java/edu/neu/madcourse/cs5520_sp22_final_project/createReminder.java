@@ -71,6 +71,13 @@ public class createReminder extends AppCompatActivity {
     private Reminder reminder;
     private TextView mRingtone;
 
+    //date image view
+    private ImageView displayDateImg;
+    private ImageView displayTimeImg;
+
+    //ring image view
+    private ImageView ringImgView;
+
     private AlertDialog dialog;
     private AlertDialog.Builder dialogBuilder;
 
@@ -119,6 +126,7 @@ public class createReminder extends AppCompatActivity {
     //button animation.
     Animation scaleUp, scaleDown;
 
+    private TextView recordingView;
 
 
     @Override
@@ -138,6 +146,11 @@ public class createReminder extends AppCompatActivity {
         mic = (ImageView) findViewById(R.id.mic_icon);
         photo = (ImageView) findViewById(R.id.photo);
         person = (ImageView) findViewById(R.id.person);
+        recordingView = (TextView) findViewById(R.id.recordingText);
+
+        displayTimeImg = (ImageView) findViewById(R.id.timeImageView);
+        displayDateImg = (ImageView) findViewById(R.id.dataImageView);
+        ringImgView = (ImageView) findViewById(R.id.imageView2);
 
 
         //Alarm
@@ -238,6 +251,15 @@ public class createReminder extends AppCompatActivity {
 
         setTextViewAnimaiton(myTextDisplayDate);
 
+        displayDateImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDateSelecotr();
+            }
+        });
+
+        setImageViewAnimaiton(displayDateImg);
+
         // on click listener for adding images to the description
         addPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -253,6 +275,15 @@ public class createReminder extends AppCompatActivity {
             @Override
             public void onClick(View view) { selectRingtoneIntent(); }
         });
+
+        ringImgView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectRingtoneIntent();
+            }
+        });
+
+        setImageViewAnimaiton(ringImgView);
 
         // set date pick listener.
         myDateSetListener = new DatePickerDialog.OnDateSetListener() {
@@ -274,6 +305,15 @@ public class createReminder extends AppCompatActivity {
         });
 
         setTextViewAnimaiton(myTextDisplayTime);
+
+        displayTimeImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showTimeSelector();
+            }
+        });
+
+        setImageViewAnimaiton(displayTimeImg);
 
         // set time pick listener.
         myTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
@@ -358,6 +398,7 @@ public class createReminder extends AppCompatActivity {
                         if (result.getResultCode() == 1) {
                             assert result.getData() != null;
                             currentRecordingPath = result.getData().getStringExtra("recordingFile");
+                            recordingView.setText("Saved Recording");
                         }
                     }
                 });
@@ -437,7 +478,7 @@ public class createReminder extends AppCompatActivity {
                 repeat.setSelection(reminder.repeat);
                 ringtonePath = reminder.soundPath;
                 if (ringtonePath != null) {
-                    mRingtone.setText(ringtonePath);
+                    mRingtone.setText("Saved Ring");
                 }
                 showImage(reminder.image);
                 if (reminder.contact != null) {
@@ -449,6 +490,7 @@ public class createReminder extends AppCompatActivity {
                     contactEmailText.setText(contact[2]);
                 }
                 currentRecordingPath = reminder.voice;
+                if (currentRecordingPath != null) recordingView.setText("Saved Recording");
             }
         }
     }
@@ -639,7 +681,7 @@ public class createReminder extends AppCompatActivity {
         // show a preview of the ringtone in the textview
         if (requestCode == 999 && resultCode == RESULT_OK) {
             Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-            mRingtone.setText(uri.getPath());
+            mRingtone.setText("Selected ringtone saved");
             ringtonePath = uri.toString();
 //            MediaPlayer.create(this, Uri.parse("content://media/external_primary/audio/media/63?title=Your%20New%20Adventure&canonical=1")).start();
         }

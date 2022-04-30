@@ -37,26 +37,6 @@
             app:layout_constraintTop_toBottomOf="@+id/saveData" />
 
         <TextView
-            android:id="@+id/location"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="44dp"
-            android:layout_marginTop="36dp"
-            android:textSize="20sp"
-            app:layout_constraintStart_toEndOf="@+id/mapSelector"
-            app:layout_constraintTop_toBottomOf="@+id/description" />
-
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="28dp"
-            android:layout_marginTop="5dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView"
-            app:srcCompat="@drawable/music_foreground" />
-
-        <TextView
             android:id="@+id/timeSelector"
             android:layout_width="53dp"
             android:layout_height="22dp"
@@ -69,38 +49,15 @@
             app:layout_constraintTop_toBottomOf="@+id/editTextTaskName" />
 
         <TextView
-            android:id="@+id/selectRingtone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="44dp"
-            android:layout_marginTop="28dp"
-            android:text="Select Ringtone"
-            android:textSize="20dp"
-            app:layout_constraintStart_toEndOf="@+id/imageView2"
-            app:layout_constraintTop_toBottomOf="@+id/hashTag" />
-
-        <TextView
             android:id="@+id/dateSelector"
             android:layout_width="wrap_content"
             android:layout_height="22dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="36dp"
             android:hint="Date"
             android:textSize="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.053"
             app:layout_constraintStart_toEndOf="@+id/dataImageView"
             app:layout_constraintTop_toBottomOf="@+id/editTextTaskName" />
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="28dp"
-            android:layout_marginBottom="5dp"
-            app:layout_constraintBottom_toTopOf="@+id/imageView2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/description"
-            app:srcCompat="@drawable/hash_foreground" />
 
         <ImageView
             android:id="@+id/dataImageView"
@@ -112,67 +69,173 @@
             app:layout_constraintTop_toBottomOf="@+id/editTextTaskName"
             app:srcCompat="@drawable/calendar_foreground" />
 
-        <EditText
-            android:id="@+id/description"
-            android:layout_width="480dp"
-            android:layout_height="130dp"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/et_layout"
-            android:ems="10"
-            android:gravity="top"
-            android:hint="Description"
-            android:inputType="textMultiLine"
-            android:paddingLeft="10dp"
-            android:paddingTop="5dp"
-            android:paddingRight="10dp"
-            android:paddingBottom="5dp"
-            android:text=""
+        <LinearLayout
+            android:id="@+id/container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.262"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/repeat_options" />
+            app:layout_constraintTop_toBottomOf="@+id/editTextTaskName">
 
-        <ImageView
-            android:id="@+id/mapSelector"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="28dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="5dp"
-            app:layout_constraintBottom_toTopOf="@+id/person"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/description"
-            app:srcCompat="@drawable/location_foreground" />
+            <EditText
+                android:id="@+id/description"
+                android:layout_width="480dp"
+                android:layout_height="130dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/et_layout"
+                android:ems="10"
+                android:gravity="top"
+                android:hint="Description"
+                android:inputType="textMultiLine"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="5dp"
+                android:text=""
+                app:layout_constraintHorizontal_bias="0.262" />
+
+            <ImageView
+                android:id="@+id/photo"
+                android:layout_width="100dp"
+                android:layout_height="130dp"
+                android:layout_below="@id/photoImageView"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/et_layout"
+                android:hint="Take a photo."
+                app:layout_constraintStart_toEndOf="@+id/description" />
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/photoImageView"
             android:layout_width="49dp"
             android:layout_height="45dp"
-            app:layout_constraintBottom_toBottomOf="@+id/description"
-            app:layout_constraintEnd_toEndOf="@+id/description"
+            app:layout_constraintBottom_toBottomOf="@+id/container"
+            app:layout_constraintStart_toStartOf="@+id/container"
             app:srcCompat="@drawable/add_photo_foreground" />
 
-        <ImageView
-            android:id="@+id/person"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="28dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="5dp"
-            app:layout_constraintBottom_toTopOf="@+id/imageView"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mapSelector"
-            app:srcCompat="@drawable/people_foreground" />
+            app:layout_constraintTop_toBottomOf="@+id/container">
 
-        <ImageView
-            android:id="@+id/mic_icon"
-            android:layout_width="37dp"
-            android:layout_height="36dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="18dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView2"
-            app:srcCompat="@drawable/microphone_342" />
+            <TextView
+                android:id="@+id/contactText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="44dp"
+                android:layout_marginBottom="35dp"
+                android:text="Contact Information"
+                android:textSize="20dp"
+                app:layout_constraintBottom_toTopOf="@+id/hashTag"
+                app:layout_constraintStart_toEndOf="@+id/person" />
+
+            <ImageView
+                android:id="@+id/person"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="5dp"
+                app:layout_constraintBottom_toTopOf="@+id/imageView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mapSelector"
+                app:srcCompat="@drawable/people_foreground" />
+
+            <TextView
+                android:id="@+id/recordingText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="58dp"
+                android:layout_marginBottom="10dp"
+                android:text="Recording"
+                android:textSize="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/mic_icon" />
+
+            <TextView
+                android:id="@+id/selectRingtone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="44dp"
+                android:layout_marginBottom="60dp"
+                android:text="Select Ringtone"
+                android:textSize="20dp"
+                app:layout_constraintBottom_toTopOf="@+id/recordingText"
+                app:layout_constraintStart_toEndOf="@+id/imageView2" />
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="5dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageView"
+                app:srcCompat="@drawable/music_foreground" />
+
+            <ImageView
+                android:id="@+id/mic_icon"
+                android:layout_width="37dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="38dp"
+                android:layout_marginBottom="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageView2"
+                app:srcCompat="@drawable/microphone_342" />
+
+            <ImageView
+                android:id="@+id/mapSelector"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/location_foreground" />
+
+            <TextView
+                android:id="@+id/location"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="44dp"
+                android:layout_marginTop="25dp"
+                android:textSize="20sp"
+                app:layout_constraintStart_toEndOf="@+id/mapSelector"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Spinner
+                android:id="@+id/hashTag"
+                android:layout_width="167dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="44dp"
+                android:layout_marginBottom="30dp"
+                android:entries="@array/hashtag"
+                app:layout_constraintBottom_toTopOf="@+id/selectRingtone"
+                app:layout_constraintStart_toEndOf="@+id/imageView" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                app:layout_constraintBottom_toTopOf="@+id/imageView2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/person"
+                app:srcCompat="@drawable/hash_foreground" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <ImageView
             android:id="@+id/timeImageView"
@@ -183,80 +246,31 @@
             app:layout_constraintTop_toBottomOf="@+id/editTextTaskName"
             app:srcCompat="@drawable/time_foreground" />
 
-        <ImageView
-            android:id="@+id/photo"
-            android:layout_width="100dp"
-            android:layout_height="130dp"
-            android:layout_below="@id/photoImageView"
-            android:layout_marginStart="80dp"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/et_layout"
-            android:hint="Take a photo."
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.885"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/repeat_options" />
+
 
         <Spinner
             android:id="@+id/repeat_options"
             android:layout_width="167dp"
             android:layout_height="48dp"
-            android:layout_marginTop="25dp"
-            android:layout_marginEnd="64dp"
+            android:layout_marginStart="21dp"
 
+            android:layout_marginTop="25dp"
             android:entries="@array/repeat_option"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/repeatView"
             app:layout_constraintTop_toBottomOf="@+id/editTextTaskName" />
 
         <TextView
             android:id="@+id/repeatView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="50dp"
+            android:layout_marginStart="76dp"
             android:layout_marginTop="35dp"
             android:layout_marginEnd="20dp"
             android:text="Repeat"
             android:textSize="20sp"
             app:layout_constraintEnd_toStartOf="@+id/repeat_options"
-            app:layout_constraintHorizontal_bias="0.978"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/dateSelector"
             app:layout_constraintTop_toBottomOf="@+id/editTextTaskName" />
-
-        <Spinner
-            android:id="@+id/hashTag"
-            android:layout_width="167dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="44dp"
-            android:layout_marginTop="154dp"
-            android:entries="@array/hashtag"
-            app:layout_constraintStart_toEndOf="@+id/imageView"
-            app:layout_constraintTop_toBottomOf="@+id/description" />
-
-        <TextView
-            android:id="@+id/contactText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
-            android:text="Contact Information"
-            android:textSize="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.096"
-            app:layout_constraintStart_toEndOf="@+id/person"
-            app:layout_constraintTop_toBottomOf="@+id/description" />
-
-        <TextView
-            android:id="@+id/recordingText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="304dp"
-            android:text="Recording"
-            android:textSize="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.099"
-            app:layout_constraintStart_toEndOf="@+id/mic_icon"
-            app:layout_constraintTop_toBottomOf="@+id/description"
-            app:layout_constraintVertical_bias="0.0" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
