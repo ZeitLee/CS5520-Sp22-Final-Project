@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        weakActivity = new WeakReference<>(MainActivity.this);
         setContentView(R.layout.activity_main);
         loc = new Loc(this);
         hashTag = (Spinner) findViewById(R.id.search);
@@ -80,9 +81,6 @@ public class MainActivity extends AppCompatActivity {
         loadComponent();
         loadListener();
         loadReminders();
-
-
-        weakActivity = new WeakReference<>(MainActivity.this);
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
                 new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.LEFT) {

@@ -110,8 +110,6 @@ public class createReminder extends AppCompatActivity {
     String currentPhotoPath; //can be retrieved later
     String currentRecordingPath;
 
-    MainActivity weakRefMain;
-
 
 
     @Override
@@ -131,8 +129,6 @@ public class createReminder extends AppCompatActivity {
         mic = (ImageView) findViewById(R.id.mic_icon);
         photo = (ImageView) findViewById(R.id.photo);
         person = (ImageView) findViewById(R.id.person);
-
-        weakRefMain = MainActivity.getMyInstanceActivity();
 
 
         //Alarm
@@ -172,16 +168,18 @@ public class createReminder extends AppCompatActivity {
         System.out.println("curLoc");
         System.out.println(Arrays.toString(currLoc));
         if (geoLoc[0] == 0 && geoLoc[1] == 0) {
-            if (currLoc[0] == 0 && currLoc[1] == 0) {
-                loc.setViewLocation(locationView);
-            } else {
-                locationView.setText(Loc.geoToAddress(currLoc[0], currLoc[1], this));
+            if (currLoc != null) {
+                if (currLoc[0] == 0 && currLoc[1] == 0) {
+                    loc.setViewLocation(locationView);
+                } else {
+                    locationView.setText(Loc.geoToAddress(currLoc[0], currLoc[1], this));
+                }
             }
         }
     }
 
     // Go back to the previous screen
-    public void backtoMain(View V){
+    public void backtoMain(){
         System.out.println("back to main");
         String date = ((TextView)findViewById(R.id.dateSelector)).getText().toString();
         String time = ((TextView)findViewById(R.id.timeSelector)).getText().toString();
@@ -206,7 +204,10 @@ public class createReminder extends AppCompatActivity {
         System.out.println("existed Alarm: " + existedAlarmNo);
         System.out.println("Ring Path: " + ringtonePath);
 
-        Alarm_No = new Alarm(weakRefMain)
+        //getLayoutInflater().inflate(R.layout.activity_main, null)
+        //                .getContext()
+
+        Alarm_No = new Alarm(MainActivity.getMyInstanceActivity())
                 .fireAlarm(des, repeatOption, existedAlarmNo, ringtonePath,
                         dateSplit[2], dateSplit[0], dateSplit[1],
                         timeSplit[0], timeSplit[1]);
@@ -295,7 +296,7 @@ public class createReminder extends AppCompatActivity {
             public void onClick(View view) {
                 //call backtoMain before settingDone
                 //do not call backtoMain twice
-                backtoMain(view);
+                backtoMain();
                 settingDone();
             }
         });
@@ -610,8 +611,8 @@ public class createReminder extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked OK button
                 // save contact information.
+                backtoMain();
                 settingDone();
-                finish();
             }
         });
 //        exitDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

@@ -1,5 +1,6 @@
 package edu.neu.madcourse.cs5520_sp22_final_project;
 
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -124,6 +125,7 @@ public class Recording extends AppCompatActivity {
         play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                System.out.println(path);
                 if (!isPlaying) {
                     if (path != null) {
                         try {
@@ -277,7 +279,8 @@ public class Recording extends AppCompatActivity {
     private String getRecordingFilePath() {
         ContextWrapper contextWrapper = new ContextWrapper(getApplicationContext());
         File music = contextWrapper.getExternalFilesDir(Environment.DIRECTORY_MUSIC);
-        File file = new File(music, "recording" + ".mp3");
+        File file = new File(music, "recording" + getIntent().getExtras().getString("id")
+                + ".mp3");
         path = file.getPath();
         return path;
     }
@@ -297,4 +300,5 @@ public class Recording extends AppCompatActivity {
         i.putExtra("id", getIntent().getExtras().getString("id"));
         startActivity(i);
     }
+
 }
