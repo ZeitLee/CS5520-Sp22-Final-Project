@@ -683,6 +683,8 @@ public class createReminder extends AppCompatActivity {
             Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
             mRingtone.setText("Selected ringtone saved");
             ringtonePath = uri.toString();
+            toast = Toast.makeText(getApplicationContext(), "Ringtone saved successfully!", Toast.LENGTH_SHORT);
+            toast.show();
 //            MediaPlayer.create(this, Uri.parse("content://media/external_primary/audio/media/63?title=Your%20New%20Adventure&canonical=1")).start();
         }
     }
