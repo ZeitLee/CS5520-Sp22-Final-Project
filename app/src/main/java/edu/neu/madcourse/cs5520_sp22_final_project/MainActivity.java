@@ -16,8 +16,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
+import android.provider.Settings;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View;
@@ -106,9 +108,16 @@ public class MainActivity extends AppCompatActivity {
                         int Alarm_No = itemList.get(position).Alarm_No;
                         System.out.println("Alarm_no in Swipe" + Alarm_No);
                         Intent intent = new Intent(MainActivity.this, Receiver.class);
-                        PendingIntent pItent = PendingIntent.getBroadcast(MainActivity.this, Alarm_No, intent, PendingIntent.FLAG_MUTABLE);
+                        PendingIntent pItent;
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                            pItent = PendingIntent.getBroadcast(MainActivity.this, Alarm_No, intent, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_CANCEL_CURRENT);
+                        } else {
+                            pItent = PendingIntent.getBroadcast(MainActivity.this, Alarm_No, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                        }
                         AlarmManager alarm = (AlarmManager) MainActivity.this.getSystemService(Context.ALARM_SERVICE);
+                        System.out.println(alarm.getNextAlarmClock());
                         alarm.cancel(pItent);
+                        System.out.println(alarm.getNextAlarmClock());
 
                         System.out.println(itemList);
                         System.out.println(allList);

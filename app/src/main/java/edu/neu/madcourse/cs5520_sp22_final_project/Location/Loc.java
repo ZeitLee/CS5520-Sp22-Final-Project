@@ -89,15 +89,18 @@ public class Loc {
                 .addOnSuccessListener(new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
-                        System.out.println("+++++++++++++++++");
-                        System.out.println("curr");
-                        System.out.println(location.getLatitude());
-                        System.out.println(location.getLongitude());
-                        la = location.getLatitude();
-                        lo = location.getLongitude();
-                        System.out.println("+++++++++++++++++");
+                        if (location != null) {
+                            System.out.println("+++++++++++++++++");
+                            System.out.println("curr");
+                            System.out.println(location.getLatitude());
+                            System.out.println(location.getLongitude());
+                            la = location.getLatitude();
+                            lo = location.getLongitude();
+                            System.out.println("+++++++++++++++++");
+                        }
 
                         address = geoToAddress(la, lo, activity);
+                        System.out.println(address);
                         if (view != null) {
                             view.setText(address);
                         }

@@ -738,8 +738,9 @@ public class createReminder extends AppCompatActivity {
         exitDialog.setPositiveButton("OK" , new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked OK button
-                backtoMain();
-                settingDone();
+//                backtoMain();
+//                settingDone();
+                finish();
             }
         });
         exitDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
