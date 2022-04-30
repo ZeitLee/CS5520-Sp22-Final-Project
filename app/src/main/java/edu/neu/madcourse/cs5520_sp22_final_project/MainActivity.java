@@ -110,9 +110,17 @@ public class MainActivity extends AppCompatActivity {
                         AlarmManager alarm = (AlarmManager) MainActivity.this.getSystemService(Context.ALARM_SERVICE);
                         alarm.cancel(pItent);
 
+                        System.out.println(itemList);
+                        System.out.println(allList);
+                        System.out.println(idList);
                         edit.remove(id).commit();
                         idList.remove(id);
+                        allList.remove(itemList.get(position));
                         itemList.remove(position);
+                        System.out.println("after");
+                        System.out.println(itemList);
+                        System.out.println(allList);
+                        System.out.println(idList);
                         rviewAdapter.notifyItemRemoved(position);
                     }
                 });
