@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.PackageManagerCompat;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,8 +17,12 @@ import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,16 +33,21 @@ import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import pl.droidsonroids.gif.GifImageView;
+
 public class Recording extends AppCompatActivity {
 
     private static final int REQUEST_AUDIO_PERMISSION_CODE = 101;
     private MediaRecorder mediaRecorder;
     private MediaPlayer mediaPlayer;
-    private Button startRecord;
-    private Button play;
+    private ImageView startRecord;
+    private ImageView play;
     private TextView timer;
     private boolean isRecording;
     private boolean isPlaying;
+
+    private GifImageView gif;
+    private ImageView micIdle;
 
     private int seconds;
     private String path;
@@ -45,6 +55,9 @@ public class Recording extends AppCompatActivity {
     int dummySeconds;
     Handler handler;
     int playableSeconds;
+
+    //button animation.
+    Animation scaleUp, scaleDown;
 
     ExecutorService executorService;
 
@@ -57,18 +70,28 @@ public class Recording extends AppCompatActivity {
         initialElements();
         seconds = 0;
         dummySeconds = 0;
+
+        setImageViewAnimaiton(startRecord);
+        setImageViewAnimaiton(play);
     }
 
     /**
      * Initial all elements in the screen.
      */
     private void initialElements() {
-        startRecord = (Button) findViewById(R.id.start);
-        play = (Button) findViewById(R.id.play);
+        startRecord = (ImageView) findViewById(R.id.recording_button);
+        play = (ImageView) findViewById(R.id.play_icon);
         timer = (TextView) findViewById(R.id.timer);
         isRecording = false;
         isPlaying = false;
         executorService = Executors.newSingleThreadExecutor();
+        gif = (GifImageView) findViewById(R.id.gifImageView);
+        gif.setVisibility(View.INVISIBLE);
+        micIdle = (ImageView) findViewById(R.id.mic_idle);
+
+        // set animaiton.
+        scaleUp = AnimationUtils.loadAnimation(this, R.anim.scale_up);
+        scaleDown = AnimationUtils.loadAnimation(this, R.anim.scale_down);
 
         mediaPlayer = new MediaPlayer();
 
@@ -82,14 +105,15 @@ public class Recording extends AppCompatActivity {
         setStartButton();
         setPlayerButton();
 
-        finish = (Button) findViewById(R.id.finish);
+        //finish = (Button) findViewById(R.id.finish);
 
-        finish.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
+//        finish.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                onBackPressed();
+//            }
+//        });
+
     }
 
     // set start button click listener.
@@ -115,28 +139,30 @@ public class Recording extends AppCompatActivity {
                 System.out.println(path);
                 if (!isPlaying) {
                     if (path != null) {
+
                         try {
                             mediaPlayer.setDataSource(path);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     } else {
-                        Toast.makeText(getApplicationContext(), "No Recording Present.",
-                                Toast.LENGTH_SHORT).show();
+                        noRecordingFileAlertDialog();
                         return;
                     }
                     try {
                         mediaPlayer.prepare();
                         playableSeconds = (Integer.valueOf(mediaPlayer.getDuration()) / 1000) + 1;
-                        System.out.println(playableSeconds);
                         dummySeconds = playableSeconds;
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                     mediaPlayer.start();
                     isPlaying = true;
+                    // set icon image.
+                    play.setImageResource(R.drawable.stop_button);
                     runTimer();
                 } else {
+                    play.setImageResource(R.drawable.play_button);
                     mediaPlayer.stop();
                     mediaPlayer.release();
                     mediaPlayer = null;
@@ -147,6 +173,12 @@ public class Recording extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void noRecordingFileAlertDialog() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setMessage("Recording not found, please try after recording!");
+        dialogBuilder.create().show();
     }
 
     private void runTimer() {
@@ -174,7 +206,6 @@ public class Recording extends AppCompatActivity {
                         return;
                     }
                 }
-
                 handler.postDelayed(this, 1000);
             }
         });
@@ -195,6 +226,10 @@ public class Recording extends AppCompatActivity {
         // check recording state.
         if (!isRecording) {
             isRecording = true;
+            // switch animation.
+            gif.setVisibility(View.VISIBLE);
+            micIdle.setVisibility(View.INVISIBLE);
+
             executorService.execute(new Runnable() {
                 @Override
                 public void run() {
@@ -223,6 +258,8 @@ public class Recording extends AppCompatActivity {
                 }
             });
         } else {
+            gif.setVisibility(View.INVISIBLE);
+            micIdle.setVisibility(View.VISIBLE);
             mediaRecorder.stop();
             mediaRecorder.release();
             mediaRecorder = null;
@@ -270,6 +307,21 @@ public class Recording extends AppCompatActivity {
                 + ".mp3");
         path = file.getPath();
         return path;
+    }
+
+    //Helper to set textView animation.
+    private void setImageViewAnimaiton(ImageView img) {
+        img.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    img.startAnimation(scaleUp);
+                } else if (motionEvent.getAction() == MotionEvent.ACTION_UP){
+                    img.startAnimation(scaleDown);
+                }
+                return false;
+            }
+        });
     }
 
 

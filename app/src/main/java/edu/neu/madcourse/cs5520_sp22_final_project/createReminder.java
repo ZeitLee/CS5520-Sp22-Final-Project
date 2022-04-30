@@ -24,7 +24,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -113,6 +116,9 @@ public class createReminder extends AppCompatActivity {
     //record activity result launcher
     ActivityResultLauncher<Intent> recordLauncher;
 
+    //button animation.
+    Animation scaleUp, scaleDown;
+
 
 
     @Override
@@ -147,34 +153,11 @@ public class createReminder extends AppCompatActivity {
         geoLoc = new double[2];
         currLoc = getIntent().getDoubleArrayExtra("loc");
         address = "";
-        intentActivityResultLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        System.out.println("+++++++++");
-                        System.out.println("get back");
-                        System.out.println(result.getResultCode());
-                        if (result.getResultCode() == 1) {
-                            assert result.getData() != null;
-                            geoLoc = result.getData().getDoubleArrayExtra("address");
-                            locationView.setText(Loc.geoToAddress(geoLoc[0], geoLoc[1], createReminder.this));
-                        }
-                    }
-                });
 
+        // set animaiton.
+        scaleUp = AnimationUtils.loadAnimation(this, R.anim.scale_up);
+        scaleDown = AnimationUtils.loadAnimation(this, R.anim.scale_down);
 
-        recordLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode() == 1) {
-                            assert result.getData() != null;
-                            currentRecordingPath = result.getData().getStringExtra("recordingFile");
-                        }
-                    }
-                });
         // Initialization.
         initialSetting();
         initialValue();
@@ -184,12 +167,10 @@ public class createReminder extends AppCompatActivity {
         System.out.println("curLoc");
         System.out.println(Arrays.toString(currLoc));
         if (geoLoc[0] == 0 && geoLoc[1] == 0) {
-            if (currLoc != null) {
-                if (currLoc[0] == 0 && currLoc[1] == 0) {
-                    loc.setViewLocation(locationView);
-                } else {
-                    locationView.setText(Loc.geoToAddress(currLoc[0], currLoc[1], this));
-                }
+            if (currLoc[0] == 0 && currLoc[1] == 0) {
+                loc.setViewLocation(locationView);
+            } else {
+                locationView.setText(Loc.geoToAddress(currLoc[0], currLoc[1], this));
             }
         }
     }
@@ -255,6 +236,8 @@ public class createReminder extends AppCompatActivity {
             }
         });
 
+        setTextViewAnimaiton(myTextDisplayDate);
+
         // on click listener for adding images to the description
         addPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -262,6 +245,8 @@ public class createReminder extends AppCompatActivity {
                 dispatchTakePictureIntent(); //take pictures
             }
         });
+
+        setImageViewAnimaiton(addPhoto);
 
         // on click listener for selecting ringtone
         mRingtone.setOnClickListener(new View.OnClickListener() {
@@ -288,6 +273,8 @@ public class createReminder extends AppCompatActivity {
             }
         });
 
+        setTextViewAnimaiton(myTextDisplayTime);
+
         // set time pick listener.
         myTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
@@ -306,6 +293,8 @@ public class createReminder extends AppCompatActivity {
             }
         });
 
+        setImageViewAnimaiton(mapSelector);
+
         // done button action.
         done.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -317,6 +306,8 @@ public class createReminder extends AppCompatActivity {
             }
         });
 
+        setButtonAnimaiton(done);
+
         // person button action.
         person.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -324,6 +315,8 @@ public class createReminder extends AppCompatActivity {
                 showContactDialog();
             }
         });
+
+        setImageViewAnimaiton(person);
 
         // mic button action.
         mic.setOnClickListener(new View.OnClickListener() {
@@ -333,13 +326,89 @@ public class createReminder extends AppCompatActivity {
             }
         });
 
+        setImageViewAnimaiton(mic);
+
         // initial local storage.
         mSharedPreference = getSharedPreferences("reminder_info", MODE_PRIVATE);
         mSharedEditor = mSharedPreference.edit();
         gson = new Gson();
 
+        // initial result listener.
+        intentActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        System.out.println("+++++++++");
+                        System.out.println("get back");
+                        System.out.println(result.getResultCode());
+                        if (result.getResultCode() == 1) {
+                            assert result.getData() != null;
+                            geoLoc = result.getData().getDoubleArrayExtra("address");
+                            locationView.setText(Loc.geoToAddress(geoLoc[0], geoLoc[1], createReminder.this));
+                        }
+                    }
+                });
+
+        recordLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == 1) {
+                            assert result.getData() != null;
+                            currentRecordingPath = result.getData().getStringExtra("recordingFile");
+                        }
+                    }
+                });
+
         // initial contact dialog.
         initialDiglog();
+    }
+
+    //Helper to set button animation.
+    private void setButtonAnimaiton(Button btn) {
+        btn.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    btn.startAnimation(scaleUp);
+                } else if (motionEvent.getAction() == MotionEvent.ACTION_UP){
+                    btn.startAnimation(scaleDown);
+                }
+                return false;
+            }
+        });
+    }
+
+    //Helper to set textView animation.
+    private void setTextViewAnimaiton(TextView txt) {
+        txt.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    txt.startAnimation(scaleUp);
+                } else if (motionEvent.getAction() == MotionEvent.ACTION_UP){
+                    txt.startAnimation(scaleDown);
+                }
+                return false;
+            }
+        });
+    }
+
+    //Helper to set textView animation.
+    private void setImageViewAnimaiton(ImageView img) {
+        img.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    img.startAnimation(scaleUp);
+                } else if (motionEvent.getAction() == MotionEvent.ACTION_UP){
+                    img.startAnimation(scaleDown);
+                }
+                return false;
+            }
+        });
     }
 
     /**
@@ -425,6 +494,7 @@ public class createReminder extends AppCompatActivity {
     private void showRecordingActivity() {
         Intent intent = new Intent(this, Recording.class);
         intent.putExtra("localRecordingFile", currentRecordingPath);
+        intent.putExtra("id", id);
         recordLauncher.launch(intent);
     }
 
@@ -586,14 +656,6 @@ public class createReminder extends AppCompatActivity {
         mSharedEditor.apply();
     }
 
-    //Helper to get recording path.
-    private void getRecordingFilePath() {
-        Bundle extras = getIntent().getExtras();
-        if (extras.containsKey("recordingFile")) {
-            currentRecordingPath = extras.getString("recordingFile");
-        }
-    }
-
     // Helper method build json string based on current data.
     private String buildJson() {
         String title = nameInput.getText().toString();
@@ -606,7 +668,6 @@ public class createReminder extends AppCompatActivity {
         reminder.repeat = repeat.getSelectedItemPosition();
         reminder.soundPath = ringtonePath;
         reminder.contact = contact;
-//        getRecordingFilePath();
         reminder.voice = currentRecordingPath;
         return gson.toJson(reminder);
     }
