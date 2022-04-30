@@ -681,7 +681,7 @@ public class createReminder extends AppCompatActivity {
         // show a preview of the ringtone in the textview
         if (requestCode == 999 && resultCode == RESULT_OK) {
             Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-            mRingtone.setText("Saved Ring");
+            mRingtone.setText("Selected ringtone saved");
             ringtonePath = uri.toString();
 //            MediaPlayer.create(this, Uri.parse("content://media/external_primary/audio/media/63?title=Your%20New%20Adventure&canonical=1")).start();
         }
