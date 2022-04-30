@@ -40,9 +40,9 @@
             android:id="@+id/location"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="60dp"
+            android:layout_marginStart="44dp"
             android:layout_marginTop="36dp"
-            android:textSize="16sp"
+            android:textSize="20sp"
             app:layout_constraintStart_toEndOf="@+id/mapSelector"
             app:layout_constraintTop_toBottomOf="@+id/description" />
 
@@ -60,7 +60,7 @@
             android:id="@+id/timeSelector"
             android:layout_width="53dp"
             android:layout_height="22dp"
-            android:layout_marginStart="28dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="36dp"
             android:hint="Time"
             android:text=""
@@ -72,9 +72,10 @@
             android:id="@+id/selectRingtone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="60dp"
+            android:layout_marginStart="44dp"
             android:layout_marginTop="28dp"
             android:text="Select Ringtone"
+            android:textSize="20dp"
             app:layout_constraintStart_toEndOf="@+id/imageView2"
             app:layout_constraintTop_toBottomOf="@+id/hashTag" />
 
@@ -86,7 +87,7 @@
             android:hint="Date"
             android:textSize="20dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.079"
+            app:layout_constraintHorizontal_bias="0.053"
             app:layout_constraintStart_toEndOf="@+id/dataImageView"
             app:layout_constraintTop_toBottomOf="@+id/editTextTaskName" />
 
@@ -105,7 +106,7 @@
             android:id="@+id/dataImageView"
             android:layout_width="68dp"
             android:layout_height="66dp"
-            android:layout_marginStart="24dp"
+            android:layout_marginStart="4dp"
             android:layout_marginTop="12dp"
             app:layout_constraintStart_toEndOf="@+id/timeSelector"
             app:layout_constraintTop_toBottomOf="@+id/editTextTaskName"
@@ -230,6 +231,32 @@
             android:entries="@array/hashtag"
             app:layout_constraintStart_toEndOf="@+id/imageView"
             app:layout_constraintTop_toBottomOf="@+id/description" />
+
+        <TextView
+            android:id="@+id/contactText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:text="Contact Information"
+            android:textSize="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.096"
+            app:layout_constraintStart_toEndOf="@+id/person"
+            app:layout_constraintTop_toBottomOf="@+id/description" />
+
+        <TextView
+            android:id="@+id/recordingText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="304dp"
+            android:text="Recording"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.099"
+            app:layout_constraintStart_toEndOf="@+id/mic_icon"
+            app:layout_constraintTop_toBottomOf="@+id/description"
+            app:layout_constraintVertical_bias="0.0" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
